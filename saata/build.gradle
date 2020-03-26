@@ -31,11 +31,12 @@ android {
 }
 
 dependencies {
+    implementation(name: 'android_ffmpeg-debug', ext: 'aar')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.recyclerview:recyclerview:+'
     implementation 'com.orhanobut:logger:2.1.0'
-
+    implementation 'com.alibaba:fastjson:1.2.10'
     implementation 'com.google.android.material:material:1.1.0'
 }
