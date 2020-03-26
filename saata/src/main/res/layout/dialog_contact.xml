@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:id="@+id/ll_email"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/shape_white_bg"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/mail_tk" />
+
+        <LinearLayout
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="邮件客服"
+                android:textSize="14sp"
+                android:textColor="@color/feed_back_text_333" />
+
+            <TextView
+                android:id="@+id/tv_mail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="21211212@124.com"
+                android:textSize="12sp"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/feed_back_text_999" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/bt_mail"
+            android:layout_width="55dp"
+            android:layout_height="26dp"
+            android:textSize="12sp"
+            android:background="@drawable/shape_copy_mail"
+            android:layout_marginLeft="10dp"
+            android:text="复制"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_wxchat"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="25dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/shape_white_bg"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/weixin_tk" />
+
+        <LinearLayout
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="微信客服"
+                android:textSize="14sp"
+                android:textColor="@color/feed_back_text_333" />
+
+            <TextView
+                android:id="@+id/tv_wx"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="we12233455com"
+                android:textSize="12sp"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/feed_back_text_999" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/bt_wx"
+            android:layout_width="55dp"
+            android:layout_height="26dp"
+            android:textSize="12sp"
+            android:background="@drawable/shape_copy_wx"
+            android:layout_marginLeft="10dp"
+            android:text="复制"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_qq"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="25dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/shape_white_bg"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/qq_tk" />
+
+        <LinearLayout
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="QQ客服"
+                android:textSize="14sp"
+                android:textColor="@color/feed_back_text_333" />
+
+            <TextView
+                android:id="@+id/tv_qq"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="21211212@qq.com"
+                android:textSize="12sp"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/feed_back_text_999" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/bt_qq"
+            android:layout_width="55dp"
+            android:layout_height="26dp"
+            android:textSize="12sp"
+            android:background="@drawable/shape_copy_qq"
+            android:layout_marginLeft="10dp"
+            android:text="复制"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+</LinearLayout>

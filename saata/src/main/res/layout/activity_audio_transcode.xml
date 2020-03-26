@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.regan.saata.activity.AudioTranscodeActivity">
+
+    <include layout="@layout/title_activity" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/rl_tip1"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/sutitle_bg" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="30dp"
+                    android:text="格式选择"
+                    android:textColor="@color/white" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_height="45dp">
+
+                    <Button
+                        android:id="@+id/bt_mp3"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="43dp"
+                        android:background="@drawable/selector_format_bg"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:text="mp3" />
+
+                    <Button
+                        android:id="@+id/bt_wav"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="43dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/selector_format_bg"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:text="wav" />
+
+                    <Button
+                        android:id="@+id/bt_wma"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="43dp"
+                        android:background="@drawable/selector_format_bg"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:text="wma" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="45dp">
+
+                    <Button
+                        android:id="@+id/bt_flac"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="43dp"
+                        android:background="@drawable/selector_format_bg"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:text="flac" />
+
+                    <Button
+                        android:id="@+id/bt_aac"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="43dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/selector_format_bg"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:text="aac" />
+
+                    <Button
+                        android:id="@+id/bt_m4a"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="43dp"
+                        android:background="@drawable/selector_format_bg"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:text="m4a" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_tip2"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/sutitle_bg" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="30dp"
+                    android:text="采样率"
+                    android:textColor="@color/white" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_height="45dp">
+
+                    <Button
+                        android:id="@+id/bt_96000"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="43dp"
+                        android:background="@drawable/selector_format_bg"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:text="96000" />
+
+                    <Button
+                        android:id="@+id/bt_50400"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="43dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/selector_format_bg"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:text="50400" />
+
+                    <Button
+                        android:id="@+id/bt_48000"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="43dp"
+                        android:background="@drawable/selector_format_bg"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:text="48000" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="45dp">
+
+                    <Button
+                        android:id="@+id/bt_44100"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="43dp"
+                        android:background="@drawable/selector_format_bg"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:text="44100" />
+
+                    <Button
+                        android:id="@+id/bt_32000"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="43dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/selector_format_bg"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:text="32000" />
+
+                    <Button
+                        android:id="@+id/bt_22050"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="43dp"
+                        android:background="@drawable/selector_format_bg"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:text="22050" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="45dp">
+
+                    <Button
+                        android:id="@+id/bt_11025"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="43dp"
+                        android:background="@drawable/selector_format_bg"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:text="11025" />
+
+                    <Button
+                        android:id="@+id/bt_8000"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="43dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/selector_format_bg"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:text="8000" />
+
+                    <Button
+                        android:id="@+id/bt_0"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="43dp"
+                        android:background="@drawable/selector_format_bg"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:text="0" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_tip3"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/sutitle_bg" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="30dp"
+                    android:text="比特率"
+                    android:textColor="@color/white" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_height="45dp">
+
+                    <Button
+                        android:id="@+id/bt_320"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="43dp"
+                        android:background="@drawable/selector_format_bg"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:text="320" />
+
+                    <Button
+                        android:id="@+id/bt_224"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="43dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/selector_format_bg"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:text="224" />
+
+                    <Button
+                        android:id="@+id/bt_192"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="43dp"
+                        android:background="@drawable/selector_format_bg"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:text="192" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="45dp">
+
+                    <Button
+                        android:id="@+id/bt_160"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="43dp"
+                        android:background="@drawable/selector_format_bg"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:text="160" />
+
+                    <Button
+                        android:id="@+id/bt_96"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="43dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/selector_format_bg"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:text="96" />
+
+                    <Button
+                        android:id="@+id/bt_32"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="43dp"
+                        android:background="@drawable/selector_format_bg"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:text="32" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_tip4"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/sutitle_bg" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="30dp"
+                    android:text="声道"
+                    android:textColor="@color/white" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:layout_height="50dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_height="45dp">
+
+                    <Button
+                        android:id="@+id/bt_source"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="43dp"
+                        android:background="@drawable/selector_format_bg"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:text="保持原样" />
+
+                    <Button
+                        android:id="@+id/bt_s_track"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="43dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/selector_format_bg"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:text="单声道" />
+
+                    <Button
+                        android:id="@+id/bt_d_track"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="43dp"
+                        android:background="@drawable/selector_format_bg"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:text="双声道" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_start_transcode"
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp"
+                android:layout_marginBottom="20dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/bt_start" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.regan.saata.activity.AudioVolumeActivity">
+
+    <include layout="@layout/title_activity" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="430dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/center_buttom" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/center_mid" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_speed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:textColor="@color/white"
+                        android:textSize="25sp"
+                        android:text="0.9x" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/whiteAlpha50"
+                        android:textSize="15sp"
+                        android:text="速度" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="50dp"
+                    android:layout_alignParentBottom="true"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/iv_reduce"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginRight="30dp"
+                        android:src="@drawable/reduce" />
+
+                    <ImageView
+                        android:id="@+id/iv_plus"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/plus" />
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="290dp"
+                    android:layout_height="35dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/seek_bg"
+                        android:scaleType="centerInside" />
+
+                    <SeekBar
+                        android:id="@+id/seekbar"
+                        android:layout_width="270dp"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:progressDrawable="@drawable/seekbar_bg"
+                        android:max="15"
+                        android:maxHeight="5dp"
+                        android:progress="5"
+                        android:duplicateParentState="false"
+                        android:thumb="@drawable/seekbar_thumb"
+                        android:thumbOffset="5dp" />
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/btn_start_speed"
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                android:layout_marginBottom="20dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/bt_start" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

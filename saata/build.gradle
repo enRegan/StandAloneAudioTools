@@ -14,10 +14,33 @@ android {
 
     }
 
+    //添加我们签名文件配置
+    signingConfigs {
+        debug {
+            storeFile file("audio.jks")//key store
+            storePassword "audiotools"
+            keyAlias "audiotools"
+            keyPassword "audiotools"
+        }
+        release {
+            storeFile file("audio.jks")
+            storePassword "audiotools"
+            keyAlias "audiotools"
+            keyPassword "audiotools"
+        }
+    }
     buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            //签名配置
+            signingConfig signingConfigs.release
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            //签名配置
+            signingConfig signingConfigs.release
         }
     }
 
