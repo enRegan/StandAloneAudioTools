@@ -8,7 +8,7 @@ android {
     defaultConfig {
         applicationId "com.regan.saata"
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
 
@@ -62,4 +62,5 @@ dependencies {
     implementation 'com.orhanobut:logger:2.1.0'
     implementation 'com.alibaba:fastjson:1.2.10'
     implementation 'com.google.android.material:material:1.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 }

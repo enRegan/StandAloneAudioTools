@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -32,6 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.regan.saata.Constant;
 import com.regan.saata.R;
+import com.regan.saata.activity.VideoShowActivity;
 import com.regan.saata.activity.WebViewActivity;
 import com.regan.saata.adapter.FuncAdapter;
 import com.regan.saata.bean.FuncInfo;
@@ -127,6 +129,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 LogUtils.d(Constant.TAG, " position : " + position);
                 switch (position) {
                     case 0:
+                        startActivity(new Intent(mActivity, VideoShowActivity.class));
                         break;
                     case 1:
                         Intent agr = new Intent(mActivity, WebViewActivity.class);
