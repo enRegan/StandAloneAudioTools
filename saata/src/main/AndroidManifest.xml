@@ -17,7 +17,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.VideoShowActivity"></activity>
+        <activity android:name=".activity.Video2GifActivity"></activity>
+        <activity android:name=".activity.VideoTranscodeActivity" />
+        <activity android:name=".activity.VideoShowActivity" />
         <activity android:name=".activity.AudioCut2Activity" />
         <activity android:name=".activity.AudioSingleSelectActivity" />
         <activity android:name=".activity.AudioMultiSelectActivity" />
@@ -43,16 +45,23 @@
             android:theme="@style/SplashTheme">
 
             <!-- android:screenOrientation="portrait" -->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity
+            android:name=".activity.MainActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.MainActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.AudioTranscodeActivity"
             android:screenOrientation="portrait" />

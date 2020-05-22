@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.PermissionChecker;
 
 import com.regan.saata.Constant;
+import com.regan.saata.util.LogUtils;
 import com.regan.saata.view.MyLoadingDialog;
 
 import nl.bravobit.ffmpeg.FFmpeg;
@@ -38,6 +39,7 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         checkPermission();
         fFmpeg = FFmpeg.getInstance(this);
+        LogUtils.d(Constant.TAG, "FFmpeg.getInstance(this)");
         fFmpeg.setTimeout(Constant.FFMPEG_TIMEOUT);
         loadingDialog = new MyLoadingDialog().getLodingDialog(this);
     }

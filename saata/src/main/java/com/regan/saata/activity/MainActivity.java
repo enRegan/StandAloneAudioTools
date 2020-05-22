@@ -1,12 +1,20 @@
 package com.regan.saata.activity;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.ContentUris;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,10 +35,18 @@ import com.regan.saata.fragment.ListFragment;
 import com.regan.saata.fragment.MineFragment;
 import com.regan.saata.util.LogUtils;
 import com.regan.saata.util.SharedPrefrencesUtil;
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.engine.impl.GlideEngine;
+import com.zhihu.matisse.engine.impl.PicassoEngine;
+import com.zhihu.matisse.filter.Filter;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Locale;
+
+import nl.bravobit.ffmpeg.FFmpeg;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener, HomeFragment.OnFragmentInteractionListener {
     private final static int CODE_REQUEST_WRITE_EXTERNAL = 0x100;
@@ -62,6 +78,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     //    private ParamContants.Logger logger;
     private String smscode;
 
+    private Button btnGif;
+    private Button btnTrans;
+
+    private int type;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //必须在super 之前调用,不然无效。因为那时候fragment已经被恢复了。
@@ -69,6 +89,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             // FRAGMENTS_TAG
             savedInstanceState.remove("android:support:fragments");
             savedInstanceState.remove("android:fragments");
+        }
+        boolean isFirst = true;
+        isFirst = SharedPrefrencesUtil.getBooleanByKey(this, "isFirst", true);
+        if (isFirst) {
+            FFmpeg fFmpeg = FFmpeg.getInstance(this);
+            fFmpeg.isSupported();
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -90,6 +116,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         ivHome = findViewById(R.id.iv_home);
         ivList = findViewById(R.id.iv_list);
         ivMine = findViewById(R.id.iv_mine);
+
+        btnGif = findViewById(R.id.btn_gif);
+        btnTrans = findViewById(R.id.btn_trans);
+        btnGif.setOnClickListener(this);
+        btnTrans.setOnClickListener(this);
 
         llHome.setOnClickListener(this);
         llList.setOnClickListener(this);
@@ -233,7 +264,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         homeFragment = null;
         listFragment = null;
         mineFragment = null;
-        llHome.performClick();
+//        llHome.performClick();
     }
 
 
@@ -301,6 +332,34 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.ll_mine:
                 switchContent(llMine);
                 break;
+            case R.id.btn_gif:
+                type = 1;
+                Matisse.from(this)
+                        .choose(MimeType.ofVideo())
+                        .countable(true)
+                        .maxSelectable(1)
+//                        .addFilter(new GifSizeFilter(320, 320, 5 * Filter.K * Filter.K))
+//                        .gridExpectedSize(getResources().getDimensionPixelSize(R.dimen.grid_expected_size))
+                        .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                        .thumbnailScale(1f)
+                        .imageEngine(new PicassoEngine())
+                        .showPreview(true) // Default is `true`
+                        .forResult(PICK_VIDEO_REQUEST);
+                break;
+            case R.id.btn_trans:
+                type = 2;
+                Matisse.from(this)
+                        .choose(MimeType.ofVideo())
+                        .countable(true)
+                        .maxSelectable(1)
+//                        .addFilter(new GifSizeFilter(320, 320, 5 * Filter.K * Filter.K))
+//                        .gridExpectedSize(getResources().getDimensionPixelSize(R.dimen.grid_expected_size))
+                        .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                        .thumbnailScale(0.5f)
+                        .imageEngine(new GlideEngine())
+                        .showPreview(true) // Default is `true`
+                        .forResult(PICK_VIDEO_REQUEST);
+                break;
         }
     }
 
@@ -308,10 +367,81 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         switchContent(llList);
     }
 
+    private final int PICK_VIDEO_REQUEST = 0x2;
+    List<Uri> mSelected;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         LogUtils.d(Constant.TAG, " MainActivity onActivityResult : " + requestCode);
+        if (requestCode == PICK_VIDEO_REQUEST && resultCode == RESULT_OK && null != data) {
+            mSelected = Matisse.obtainResult(data);
+            Uri selectedVideo = mSelected.get(0);
+            String[] filePathColumn = {MediaStore.Video.Media.DATA};
+
+//            Cursor cursor = mActivity.getContentResolver().query(selectedVideo,
+//                    filePathColumn, null, null, null);
+//            cursor.moveToFirst();
+            String path = "";
+            if (DocumentsContract.isDocumentUri(this, selectedVideo)) {
+                // 如果是document类型的Uri，则通过document id处理
+                String docId = DocumentsContract.getDocumentId(selectedVideo);
+                if ("com.android.providers.media.documents".equals(selectedVideo.getAuthority())) {
+                    String id = docId.split(":")[1]; // 解析出数字格式的id
+                    String selection = MediaStore.Video.Media._ID + "=" + id;
+                    path = getPathFromUri(this, MediaStore.Video.Media.EXTERNAL_CONTENT_URI, selection);
+                } else if ("com.android.providers.downloads.documents".equals(selectedVideo.getAuthority())) {
+                    Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(docId));
+                    path = getPathFromUri(this, contentUri, null);
+                }
+            } else if ("content".equalsIgnoreCase(selectedVideo.getScheme())) {
+                // 如果是content类型的Uri，则使用普通方式处理
+                path = getPathFromUri(this, selectedVideo, null);
+            } else if ("file".equalsIgnoreCase(selectedVideo.getScheme())) {
+                // 如果是file类型的Uri，直接获取图片路径即可
+                path = selectedVideo.getPath();
+            }
+            String mVideoPath = path;
+//            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+//            String mVideoPath = cursor.getString(columnIndex);
+//            mVideoPath = "/sdcard/Download/gamepp/KSP.mkv";
+//            cursor.close();
+//            String mOutPath = Constant.getMusicPath() + MediaTool.getVideoName(mVideoPath);
+            String mOutPath;
+            Intent intent;
+            if (type == 1) {
+                mOutPath = Constant.getMusicPath() + "gif_" + System.currentTimeMillis();
+                intent = new Intent(this, Video2GifActivity.class);
+            } else {
+                mOutPath = Constant.getMusicPath() + "视频转码_" + System.currentTimeMillis();
+                intent = new Intent(this, VideoTranscodeActivity.class);
+            }
+//            mOutPath = Constant.getMusicPath() + "音频提取_" + System.currentTimeMillis();
+            intent.putExtra("mVideoPath", mVideoPath);
+            intent.putExtra("mOutPath", mOutPath);
+//            startActivity(extract);
+            startActivityForResult(intent, MainActivity.CODE_TO_FUNC);
+        }
+    }
+
+    /**
+     * 通过Uri和selection来获取真实的图片路径
+     *
+     * @param act
+     * @param uri
+     * @param selection
+     * @return
+     */
+    private static String getPathFromUri(Activity act, Uri uri, String selection) {
+        String path = null;
+        String[] projection = {MediaStore.Video.Media.DATA};
+        Cursor cursor = act.getContentResolver().query(uri, projection, selection, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            }
+            cursor.close();
+        }
+        return path;
     }
 
     @Override
@@ -334,4 +464,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void onFragmentInteraction() {
 
     }
+
+
 }

@@ -71,7 +71,7 @@ public class Constant {
 
     public static String getMusicPath() {
         String path = null;
-        File folder = new File(Environment.getExternalStorageDirectory().getPath() + "/audiotools/music/");
+        File folder = new File(Environment.getExternalStorageDirectory().getPath() + "/videotools/transcode/");
         if (!folder.exists()) {
             boolean mkdirs = folder.mkdirs();
         }

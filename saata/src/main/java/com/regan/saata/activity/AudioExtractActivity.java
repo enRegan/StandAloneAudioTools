@@ -69,7 +69,7 @@ public class AudioExtractActivity extends FuncActivity implements View.OnClickLi
         llQuality3.setOnClickListener(this);
         llQuality4.setOnClickListener(this);
         btMp3.setSelected(true);
-        mOutType = "mp3";
+        mOutType = "gif";
         btMp3.setOnClickListener(this);
         btWav.setOnClickListener(this);
         btWma.setOnClickListener(this);
@@ -157,7 +157,7 @@ public class AudioExtractActivity extends FuncActivity implements View.OnClickLi
                 btFlac.setSelected(false);
                 btAac.setSelected(false);
                 btM4A.setSelected(false);
-                mOutType = "mp3";
+                mOutType = "gif";
                 break;
             case R.id.bt_wav:
                 btWav.setSelected(true);
@@ -166,7 +166,7 @@ public class AudioExtractActivity extends FuncActivity implements View.OnClickLi
                 btFlac.setSelected(false);
                 btAac.setSelected(false);
                 btM4A.setSelected(false);
-                mOutType = "wav";
+                mOutType = "gif";
                 break;
             case R.id.bt_wma:
                 btWma.setSelected(true);
@@ -175,7 +175,7 @@ public class AudioExtractActivity extends FuncActivity implements View.OnClickLi
                 btFlac.setSelected(false);
                 btAac.setSelected(false);
                 btM4A.setSelected(false);
-                mOutType = "wma";
+                mOutType = "gif";
                 break;
             case R.id.bt_flac:
                 btFlac.setSelected(true);
@@ -184,7 +184,7 @@ public class AudioExtractActivity extends FuncActivity implements View.OnClickLi
                 btWma.setSelected(false);
                 btAac.setSelected(false);
                 btM4A.setSelected(false);
-                mOutType = "flac";
+                mOutType = "gif";
                 break;
             case R.id.bt_aac:
                 btAac.setSelected(true);
@@ -193,7 +193,7 @@ public class AudioExtractActivity extends FuncActivity implements View.OnClickLi
                 btWma.setSelected(false);
                 btFlac.setSelected(false);
                 btM4A.setSelected(false);
-                mOutType = "aac";
+                mOutType = "gif";
                 break;
             case R.id.bt_m4a:
                 btM4A.setSelected(true);
@@ -202,7 +202,7 @@ public class AudioExtractActivity extends FuncActivity implements View.OnClickLi
                 btWma.setSelected(false);
                 btFlac.setSelected(false);
                 btAac.setSelected(false);
-                mOutType = "m4a";
+                mOutType = "gif";
                 break;
 //            case R.id.iv_cover:
 //                Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
@@ -247,20 +247,26 @@ public class AudioExtractActivity extends FuncActivity implements View.OnClickLi
 //        cmdd.add("-encoders");
         cmdd.add("-i");
         cmdd.add(srcPath);
-        cmdd.add("-vn");
-        cmdd.add("-y");
-        if (!TextUtils.isEmpty(hz)) {
-            cmdd.add("-ar");//-ar freq 设置音频采样率
-            cmdd.add(hz);
-        }
-        if (!TextUtils.isEmpty(kbps)) {
-            cmdd.add("-ab");//-ab bitrate 设置音频码率
-            cmdd.add(kbps);
-        }
-        if (!TextUtils.isEmpty(channel)) {
-            cmdd.add("-ac");//设定声道数，1就是单声道，2就是立体声
-            cmdd.add(channel);
-        }
+//        cmdd.add("-vn");
+//        cmdd.add("-y");
+        cmdd.add("-r");
+        cmdd.add("15");
+        cmdd.add("-s");
+        cmdd.add("272x480");
+        cmdd.add("-b:v");
+        cmdd.add("200k");
+//        if (!TextUtils.isEmpty(hz)) {
+//            cmdd.add("-ar");//-ar freq 设置音频采样率
+//            cmdd.add(hz);
+//        }
+//        if (!TextUtils.isEmpty(kbps)) {
+//            cmdd.add("-ab");//-ab bitrate 设置音频码率
+//            cmdd.add(kbps);
+//        }
+//        if (!TextUtils.isEmpty(channel)) {
+//            cmdd.add("-ac");//设定声道数，1就是单声道，2就是立体声
+//            cmdd.add(channel);
+//        }
 //        cmdd.add("-acodec");
 //        if("wav".equals(outType) || "wma".equals(outType)){
 //            cmdd.add("pcm_s16le");
@@ -269,21 +275,22 @@ public class AudioExtractActivity extends FuncActivity implements View.OnClickLi
 //        }else{
 //            cmdd.add(outType);
 //        }
-        cmdd.add("-codec:a");
-        if ("wav".equals(outType)) {
-            cmdd.add("adpcm_ima_wav");
-        } else if ("wma".equals(outType)) {
-            cmdd.add("wmav2");
-        } else if ("m4a".equals(outType)) {
-            cmdd.add("aac");
-        } else if ("mp3".equals(outType)) {
-            cmdd.add("libmp3lame");
-        } else {
-            cmdd.add(outType);
-        }
+//        cmdd.add("-codec:a");
+//        if ("wav".equals(outType)) {
+//            cmdd.add("adpcm_ima_wav");
+//        } else if ("wma".equals(outType)) {
+//            cmdd.add("wmav2");
+//        } else if ("m4a".equals(outType)) {
+//            cmdd.add("aac");
+//        } else if ("mp3".equals(outType)) {
+//            cmdd.add("libmp3lame");
+//        } else {
+//            cmdd.add(outType);
+//        }
         final String outFile = outPath + "." + outType;
         cmdd.add(outFile);
         cmd = cmdd.toArray(new String[cmdd.size()]);
+        LogUtils.d(Constant.TAG, " cut : " + cmdd.toString());
 //        cmd[0] = "-i";
 //        cmd[1] = srcPath;
 //        cmd[2] = "-vn";

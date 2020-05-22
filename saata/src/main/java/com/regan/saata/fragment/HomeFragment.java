@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,6 +36,10 @@ import com.regan.saata.adapter.BannerPagerAdapter;
 import com.regan.saata.util.LogUtils;
 import com.regan.saata.view.IndicatorView;
 import com.regan.saata.view.NestViewPager;
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.engine.impl.GlideEngine;
+import com.zhihu.matisse.filter.Filter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -162,9 +167,20 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_audio_f_video:
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("video/*");
-                startActivityForResult(intent, PICK_VIDEO_REQUEST);
+//                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//                intent.setType("video/*");
+//                startActivityForResult(intent, PICK_VIDEO_REQUEST);
+                Matisse.from(getActivity())
+                        .choose(MimeType.ofAll())
+                        .countable(true)
+                        .maxSelectable(9)
+//                        .addFilter(new GifSizeFilter(320, 320, 5 * Filter.K * Filter.K))
+//                        .gridExpectedSize(getResources().getDimensionPixelSize(R.dimen.grid_expected_size))
+                        .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                        .thumbnailScale(0.85f)
+                        .imageEngine(new GlideEngine())
+                        .showPreview(false) // Default is `true`
+                        .forResult(PICK_VIDEO_REQUEST);
                 break;
             case R.id.ll_audio_trans:
                 ((MainActivity) mActivity).setStilGetInfo();

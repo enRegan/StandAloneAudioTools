@@ -109,17 +109,17 @@ public class ListFragment extends Fragment {
 //                    LogUtils.d(Constant.TAG, " name: " + f.getName());
 //                    LogUtils.d(Constant.TAG, " size: " + FileSizeUtil.getAutoFileOrFilesSize(f.getPath()));
                             if ("0B".equals(FileSizeUtil.getAutoFileOrFilesSize(f.getPath()))) {
-                                f.delete();
+//                                f.delete();
                                 continue;
                             }
                             try {
                                 int duration = FileDurationUtil.getDuration(f.getPath()) / 1000;
                                 if (TimeUtils.secondToTime(duration).contains("00:00:00")) {
-                                    f.delete();
+//                                    f.delete();
                                     continue;
                                 }
                             } catch (Exception e) {
-                                f.delete();
+//                                f.delete();
                                 continue;
                             }
                             if (oldData != null && oldData.size() != 0) {
