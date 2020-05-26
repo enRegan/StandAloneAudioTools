@@ -7,19 +7,21 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="50dp"
-            android:paddingBottom="80dp"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/mine_bg">
 
             <LinearLayout
                 android:id="@+id/ll_info"
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
+                android:layout_height="50dp"
                 android:orientation="horizontal"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
@@ -46,101 +48,26 @@
                     android:gravity="center_vertical"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:text="" />
+                    android:textColor="@color/text_333"
+                    android:textSize="20sp"
+                    android:text="欢迎您" />
             </LinearLayout>
 
-            <LinearLayout
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="85dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:background="@drawable/mine_vip_bg"
-                android:visibility="gone">
+                android:layout_height="1dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="22dp"
+                android:background="@color/line_d6b1" />
 
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:src="@drawable/mine_vip" />
-
-                <LinearLayout
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:orientation="vertical"
-                    android:gravity="center_vertical"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/tv_vip_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="15sp"
-                        android:text="开通会员"
-                        android:textColor="@color/white" />
-
-                    <TextView
-                        android:id="@+id/tv_vip_dec"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="12sp"
-                        android:layout_marginTop="5dp"
-                        android:text="开通会员，享受所有功能"
-                        android:textColor="@color/whiteAlpha30" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ll_open_vip"
-                    android:layout_width="75dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:background="@drawable/mine_open_vip">
-
-                    <TextView
-                        android:id="@+id/tv_open_dec"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:textSize="12sp"
-                        android:textColor="@color/save_src"
-                        android:text="去开通" />
-
-                    <ImageView
-                        android:id="@+id/iv_open_vip"
-                        android:layout_width="6dp"
-                        android:layout_height="9dp"
-                        android:src="@drawable/arrow_blue_right" />
-                </LinearLayout>
-            </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rl_func"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:overScrollMode="never"
-                android:background="@drawable/mine_func_bg" />
+                android:layout_marginTop="10dp"
+                android:overScrollMode="never" />
 
-            <TextView
-                android:id="@+id/tv_logout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:text="退出登录"
-                android:textSize="15sp"
-                android:textColor="@color/save_src" />
         </LinearLayout>
     </ScrollView>
 
@@ -149,7 +76,6 @@
         android:layout_height="50dp"
         android:gravity="center"
         android:text="我的"
-        android:background="@color/titleBg"
         android:textColor="@color/title"
         android:textSize="17sp" />
 </RelativeLayout>

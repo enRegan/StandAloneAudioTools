@@ -7,7 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Environment;
 
 
-import com.regan.saata.bean.AudioInfo;
+import com.regan.saata.bean.MediaInfo;
 
 import java.io.File;
 import java.util.List;
@@ -16,10 +16,14 @@ public class Constant {
     public static String TAG = "Regan";
     public static boolean isLogin = false;
     public static boolean toWxLogin = false;
-    public static List<AudioInfo> allAudio;
+    public static List<MediaInfo> allAudio;
     // APP_ID 替换为你的应用从官方网站申请到的合法appID
     public static String WX_APPID = "wx_appid";
+    public static String VIDEO_LIST = "video_list";
+    public static String GIF_LIST = "gif_list";
     public static String AUDIO_LIST = "audio_list";
+    public static String VIDEO = "video";
+    public static String GIF = "gif";
     public static String AUDIO = "audio";
     public static int FFMPEG_TIMEOUT = 6000 * 1000;
     public static String USER_PROTOCOL = "http://guanwang.fengdunsh.com/pro/fengdun_audioconver_userProtocol.html";
@@ -69,7 +73,7 @@ public class Constant {
     }
 
 
-    public static String getMusicPath() {
+    public static String getFilePath() {
         String path = null;
         File folder = new File(Environment.getExternalStorageDirectory().getPath() + "/videotools/transcode/");
         if (!folder.exists()) {
@@ -82,6 +86,7 @@ public class Constant {
             return path;
         }
     }
+
 
     public static float time2Float(String time) {
         float pro = -1f;

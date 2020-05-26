@@ -42,7 +42,7 @@ public class BannerPagerAdapter extends PagerAdapter implements ViewPager.OnPage
         this.vPager = vPager;
 
         // 设置默认图片
-        defaultBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.banner1);
+        defaultBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.home_banner_1);
         int width = defaultBitmap.getWidth();
 
         setBannerList(list);

@@ -6,17 +6,21 @@ import android.content.Context;
 import com.regan.saata.R;
 
 
-public class MySplashDialog {
-    private Dialog progressDialog;
+public class MySplashDialog extends Dialog {
 
-    public Dialog getSplashDialog(Context mContext) {
-        if (progressDialog == null) {
-            progressDialog = new Dialog(mContext, R.style.my_splash_dialog);
-            progressDialog.setContentView(R.layout.splash_loading);
-            progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-            progressDialog.setCanceledOnTouchOutside(false);
-            progressDialog.setCancelable(false);
-        }
-        return progressDialog;
+    public MySplashDialog(Context context) {
+        super(context);
+        init(context);
+    }
+
+    public MySplashDialog(Context context, int themeResId) {
+        super(context, themeResId);
+        init(context);
+    }
+
+    private void init(Context context) {
+        setContentView(R.layout.dialog_splash);
+        setCanceledOnTouchOutside(false);
+        setCancelable(false);
     }
 }

@@ -30,6 +30,7 @@ public class MyContactDialog {
             final TextView tvWx = (TextView) contactDialog.findViewById(R.id.tv_wx);
             final TextView tvQq = (TextView) contactDialog.findViewById(R.id.tv_qq);
             String email = SharedPrefrencesUtil.getStringByKey(mContext, SharedPrefrencesUtil.EMAIL);
+            email = "email@email.com";
             tvMail.setText(email);
             llEmail.setVisibility(TextUtils.isEmpty(email) ? View.GONE : View.VISIBLE);
             String wx = SharedPrefrencesUtil.getStringByKey(mContext, SharedPrefrencesUtil.WXCHAT);

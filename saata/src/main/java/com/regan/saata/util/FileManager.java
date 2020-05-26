@@ -8,7 +8,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 
 import com.regan.saata.Constant;
-import com.regan.saata.bean.AudioInfo;
+import com.regan.saata.bean.MediaInfo;
 import com.regan.saata.bean.VideoInfo;
 
 import java.io.ByteArrayOutputStream;
@@ -43,8 +43,8 @@ public class FileManager {
      *
      * @return
      */
-    public ArrayList<AudioInfo> getMusics(String sourcePath) {
-        ArrayList<AudioInfo> musics = new ArrayList<>();
+    public ArrayList<MediaInfo> getMusics(String sourcePath) {
+        ArrayList<MediaInfo> musics = new ArrayList<>();
         Cursor c = null;
         MediaPlayer mediaPlayer = new MediaPlayer();
         try {
@@ -77,7 +77,7 @@ public class FileManager {
                     int duration = c.getInt(c.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));// 时长
                     int id = c.getInt(c.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));// 歌曲的id
 
-                    AudioInfo music = new AudioInfo();
+                    MediaInfo music = new MediaInfo();
                     music.setId(id);
                     music.setPath(path);
                     music.setName(name);
@@ -116,12 +116,12 @@ public class FileManager {
      *
      * @return
      */
-    public ArrayList<AudioInfo> getMusics() {
+    public ArrayList<MediaInfo> getMusics() {
         if (mediaPlayer == null) {
             mediaPlayer = new MediaPlayer();
         }
         mediaPlayer.reset();
-        ArrayList<AudioInfo> musics = new ArrayList<>();
+        ArrayList<MediaInfo> musics = new ArrayList<>();
         Cursor c = null;
         try {
             c = mContentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, new String[]{MediaStore.Audio.Media._ID,
@@ -168,7 +168,7 @@ public class FileManager {
 //                int time = c.getInt(c.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));// 歌曲的id
                 // int albumId = c.getInt(c.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
 
-                AudioInfo music = new AudioInfo();
+                MediaInfo music = new MediaInfo();
                 music.setId(id);
                 music.setPath(path);
                 music.setName(name);
@@ -252,6 +252,7 @@ public class FileManager {
                 long size = c.getLong(c.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));// 大小
                 int duration = c.getInt(c.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));// 时长
                 int id = c.getInt(c.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));// 歌曲的id
+                String type = c.getString(c.getColumnIndexOrThrow(MediaStore.Audio.Media.MIME_TYPE));// 歌曲的id
 //                int time = c.getInt(c.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));// 歌曲的id
                 // int albumId = c.getInt(c.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
 
@@ -266,6 +267,7 @@ public class FileManager {
                 long time = mediaPlayer.getDuration();//获得了文件的时长（以毫秒为单位）
                 videoInfo.setTime(String.valueOf(time));
                 videoInfo.setParams(name);
+                videoInfo.setType(type);
                 videoInfos.add(videoInfo);
                 mediaPlayer.reset();
             }

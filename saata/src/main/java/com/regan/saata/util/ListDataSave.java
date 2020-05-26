@@ -6,7 +6,8 @@ import android.content.SharedPreferences;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.regan.saata.bean.AudioInfo;
+import com.regan.saata.Constant;
+import com.regan.saata.bean.MediaInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class ListDataSave {
     public <T> void setDataList(String tag, List<T> datalist) {
         if (null == datalist || datalist.size() <= 0)
             return;
-
+        LogUtils.d(Constant.TAG, " tag : " + tag);
         //转换成json数据，再保存
         String strJson = JSON.toJSONString(datalist);
         editor.clear();
@@ -44,14 +45,14 @@ public class ListDataSave {
      * @param tag
      * @return
      */
-    public List<AudioInfo> getDataList(String tag) {
-        List<AudioInfo> datalist = new ArrayList<AudioInfo>();
+    public List<MediaInfo> getDataList(String tag) {
+        List<MediaInfo> datalist = new ArrayList<MediaInfo>();
         String strJson = preferences.getString(tag, null);
         if (null == strJson) {
             return datalist;
         }
 
-        datalist = JSONArray.parseArray(strJson, AudioInfo.class);
+        datalist = JSONArray.parseArray(strJson, MediaInfo.class);
         return datalist;
 
     }

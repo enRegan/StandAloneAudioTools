@@ -43,4 +43,13 @@
     <color name="feed_back_text_gray">#888C9A</color>
     <color name="feed_back_color_area">#139EFF</color>
     <color name="bt_confirm">#4576D1</color>
+    <color name="home_item_text">#5C6877</color>
+    <color name="home_buttom_text">#4793E0</color>
+    <color name="text_333">#333333</color>
+    <color name="text_666">#666666</color>
+    <color name="text_b6b">#B6BDCB</color>
+    <color name="line_f569">#F5F6F9</color>
+    <color name="line_d6b1">#D6DBE1</color>
+    <color name="list_tab_selected">#009BFF</color>
+    <color name="text_b4b">#B4BCCA</color>
 </resources>

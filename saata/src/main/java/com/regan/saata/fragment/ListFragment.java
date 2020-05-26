@@ -6,26 +6,35 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.regan.saata.Constant;
 import com.regan.saata.R;
-import com.regan.saata.adapter.AudioListAdapter;
-import com.regan.saata.bean.AudioInfo;
+import com.regan.saata.adapter.MediaListAdapter;
+import com.regan.saata.bean.MediaInfo;
 import com.regan.saata.util.FileDurationUtil;
+import com.regan.saata.util.FileManager;
 import com.regan.saata.util.FileSizeUtil;
 import com.regan.saata.util.ListDataSave;
 import com.regan.saata.util.LogUtils;
 import com.regan.saata.util.SharedPrefrencesUtil;
 import com.regan.saata.util.TimeUtils;
+import com.regan.saata.view.MyDelDialog;
 import com.regan.saata.view.MyLoadingDialog;
 
 import java.io.File;
@@ -39,27 +48,145 @@ import nl.bravobit.ffmpeg.FFmpeg;
 import nl.bravobit.ffmpeg.FFtask;
 
 public class ListFragment extends Fragment {
+    private LinearLayout llAudio;
+    private LinearLayout llGif;
+    private LinearLayout llVideo;
+    private LinearLayout llEmpty;
+    private TextView tvAudio;
+    private TextView tvGif;
+    private TextView tvVideo;
+    private View vAudio;
+    private View vGif;
+    private View vVideo;
     private RecyclerView rvAudio;
+    private RecyclerView rvGif;
+    private RecyclerView rvVideo;
+    private ImageView ivDel;
     private FFmpeg fFmpeg;
-    private ListDataSave listDataSave;
+    private ListDataSave videolListDataSave;
+    private ListDataSave giflListDataSave;
+    private ListDataSave audioListDataSave;
+    private MediaListAdapter videoListAdapter;
+    private MediaListAdapter gifListAdapter;
+    private MediaListAdapter audioListAdapter;
     private boolean stilGetInfo = true;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_list, container, false);
+        rvVideo = root.findViewById(R.id.rv_video);
+        rvGif = root.findViewById(R.id.rv_gif);
         rvAudio = root.findViewById(R.id.rv_audio);
-
+        llVideo = root.findViewById(R.id.ll_video);
+        llEmpty = root.findViewById(R.id.ll_empty);
+        llGif = root.findViewById(R.id.ll_gif);
+        llAudio = root.findViewById(R.id.ll_audio);
+        tvVideo = root.findViewById(R.id.tv_video);
+        tvGif = root.findViewById(R.id.tv_gif);
+        tvAudio = root.findViewById(R.id.tv_audio);
+        vVideo = root.findViewById(R.id.v_video);
+        vGif = root.findViewById(R.id.v_gif);
+        vAudio = root.findViewById(R.id.v_audio);
+        ivDel = root.findViewById(R.id.iv_del);
+        llVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvAudio.setTextColor(getActivity().getResources().getColor(R.color.text_666));
+                vAudio.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
+                tvGif.setTextColor(getActivity().getResources().getColor(R.color.text_666));
+                vGif.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
+                tvVideo.setTextColor(getActivity().getResources().getColor(R.color.list_tab_selected));
+                vVideo.setBackgroundColor(getActivity().getResources().getColor(R.color.list_tab_selected));
+                rvAudio.setVisibility(View.GONE);
+                rvGif.setVisibility(View.GONE);
+//                LogUtils.d(Constant.TAG, "llVideo");
+                if (videoListAdapter.getItemCount() == 0) {
+                    rvVideo.setVisibility(View.GONE);
+                    llEmpty.setVisibility(View.VISIBLE);
+                } else {
+                    rvVideo.setVisibility(View.VISIBLE);
+                    llEmpty.setVisibility(View.GONE);
+                }
+            }
+        });
+        llGif.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvAudio.setTextColor(getActivity().getResources().getColor(R.color.text_666));
+                vAudio.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
+                tvGif.setTextColor(getActivity().getResources().getColor(R.color.list_tab_selected));
+                vGif.setBackgroundColor(getActivity().getResources().getColor(R.color.list_tab_selected));
+                tvVideo.setTextColor(getActivity().getResources().getColor(R.color.text_666));
+                vVideo.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
+                rvAudio.setVisibility(View.GONE);
+                rvVideo.setVisibility(View.GONE);
+//                LogUtils.d(Constant.TAG, "llGif");
+                if (gifListAdapter.getItemCount() == 0) {
+                    rvGif.setVisibility(View.GONE);
+                    llEmpty.setVisibility(View.VISIBLE);
+                } else {
+                    rvGif.setVisibility(View.VISIBLE);
+                    llEmpty.setVisibility(View.GONE);
+                }
+            }
+        });
+        llAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvAudio.setTextColor(getActivity().getResources().getColor(R.color.list_tab_selected));
+                vAudio.setBackgroundColor(getActivity().getResources().getColor(R.color.list_tab_selected));
+                tvGif.setTextColor(getActivity().getResources().getColor(R.color.text_666));
+                vGif.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
+                tvVideo.setTextColor(getActivity().getResources().getColor(R.color.text_666));
+                vVideo.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
+                rvGif.setVisibility(View.GONE);
+                rvVideo.setVisibility(View.GONE);
+//                LogUtils.d(Constant.TAG, "llAudio");
+                if (audioListAdapter.getItemCount() == 0) {
+                    rvAudio.setVisibility(View.GONE);
+                    llEmpty.setVisibility(View.VISIBLE);
+                } else {
+                    rvAudio.setVisibility(View.VISIBLE);
+                    llEmpty.setVisibility(View.GONE);
+                }
+            }
+        });
+        ivDel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final MyDelDialog myDelDialog = new MyDelDialog(mActivity, R.style.my_del_dialog);
+                ImageView ivCancle = myDelDialog.findViewById(R.id.iv_cancle);
+                ImageView ivConfirm = myDelDialog.findViewById(R.id.iv_confirm);
+                ivCancle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myDelDialog.dismiss();
+                    }
+                });
+                ivConfirm.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        FileManager.deletefile(Constant.getFilePath());
+                        myDelDialog.dismiss();
+                        onResume();
+                    }
+                });
+                myDelDialog.show();
+            }
+        });
 //        FileManager fileManager = FileManager.getInstance(mActivity);
-//        List<AudioInfo> audioInfos = fileManager.getMusics();
+//        List<MediaInfo> audioInfos = fileManager.getMusics();
 //        LogUtils.d(Constant.TAG, " musics : " + audioInfos.size());
-//        for (AudioInfo info:audioInfos
+//        for (MediaInfo info:audioInfos
 //             ) {
 //            LogUtils.d(Constant.TAG, " info : " + info.toString());
 //        }
 
         fFmpeg = FFmpeg.getInstance(mActivity);
-        listDataSave = new ListDataSave(mActivity, Constant.AUDIO_LIST);
+        videolListDataSave = new ListDataSave(mActivity, Constant.VIDEO_LIST);
+        giflListDataSave = new ListDataSave(mActivity, Constant.GIF_LIST);
+        audioListDataSave = new ListDataSave(mActivity, Constant.AUDIO_LIST);
         return root;
     }
 
@@ -78,98 +205,35 @@ public class ListFragment extends Fragment {
                         dialog.show();
                     }
                 });
-                File file = new File(Constant.getMusicPath());
+                File file = new File(Constant.getFilePath());
                 final File[] files = file.listFiles();
                 LogUtils.d(Constant.TAG, " files lastModified : " + file.lastModified());
                 lastModifiedTime = SharedPrefrencesUtil.getLongByKey(mActivity, "lastModifiedTime", 0);
                 LogUtils.d(Constant.TAG, " lastModified : " + lastModifiedTime);
-                List<AudioInfo> oldData = listDataSave.getDataList(Constant.AUDIO, AudioInfo.class);
-                final List<AudioInfo> data = new ArrayList<>();
-                final AudioListAdapter audioListAdapter = new AudioListAdapter(mActivity, data);
+                List<MediaInfo> oldVideoData = videolListDataSave.getDataList(Constant.VIDEO, MediaInfo.class);
+                List<MediaInfo> oldGifData = giflListDataSave.getDataList(Constant.GIF, MediaInfo.class);
+                List<MediaInfo> oldAudioData = audioListDataSave.getDataList(Constant.AUDIO, MediaInfo.class);
+                final List<MediaInfo> videoList = new ArrayList<>();
+                final List<MediaInfo> gifList = new ArrayList<>();
+                final List<MediaInfo> audioList = new ArrayList<>();
+                videoListAdapter = new MediaListAdapter(mActivity, videoList);
+                gifListAdapter = new MediaListAdapter(mActivity, gifList);
+                audioListAdapter = new MediaListAdapter(mActivity, audioList);
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        rvAudio.setLayoutManager(new LinearLayoutManager(mActivity));
+                        rvVideo.setLayoutManager(new GridLayoutManager(mActivity, 2));
+                        rvVideo.setAdapter(videoListAdapter);
+                        rvGif.setLayoutManager(new GridLayoutManager(mActivity, 2));
+                        rvGif.setAdapter(gifListAdapter);
+                        rvAudio.setLayoutManager(new GridLayoutManager(mActivity, 2));
                         rvAudio.setAdapter(audioListAdapter);
                     }
                 });
-                if (lastModifiedTime == file.lastModified()) {
-                    data.addAll(oldData);
-                    oldData.clear();
-                } else {
-                    stilGetInfo = true;
-//                    String[] a = file.list();
-//                    if(a != null && a.length > 0){
-//                        for (String s:a) {
-//                            LogUtils.d(Constant.TAG, s);
-//                        }
-//                    }
-                    if (files != null && files.length > 0) {
-                        for (final File f : files) {
-//                    LogUtils.d(Constant.TAG, " name: " + f.getName());
-//                    LogUtils.d(Constant.TAG, " size: " + FileSizeUtil.getAutoFileOrFilesSize(f.getPath()));
-                            if ("0B".equals(FileSizeUtil.getAutoFileOrFilesSize(f.getPath()))) {
-//                                f.delete();
-                                continue;
-                            }
-                            try {
-                                int duration = FileDurationUtil.getDuration(f.getPath()) / 1000;
-                                if (TimeUtils.secondToTime(duration).contains("00:00:00")) {
-//                                    f.delete();
-                                    continue;
-                                }
-                            } catch (Exception e) {
-//                                f.delete();
-                                continue;
-                            }
-                            if (oldData != null && oldData.size() != 0) {
-//                                LogUtils.d(Constant.TAG, "oldData");
-                                boolean isContains = false;
-                                for (AudioInfo audioInfo : oldData) {
-//                                    LogUtils.d(Constant.TAG, "AudioInfo");
-                                    if (audioInfo.getName().equals(f.getName())) {
-//                                        LogUtils.d(Constant.TAG, "continue");
-                                        data.add(audioInfo);
-                                        isContains = true;
-                                        break;
-                                    }
-                                }
-                                if (isContains) {
-                                    continue;
-                                }
-                            }
-//                    LogUtils.d(Constant.TAG, " type: " + f.getPath().substring(f.getPath().lastIndexOf(".") + 1));
-                            final AudioInfo info = new AudioInfo();
-//                            LogUtils.d(Constant.TAG, "yeah " + info.getName());
-                            info.setPath(f.getPath());
-                            info.name = f.getName();
-                            info.time = "时长:" + TimeUtils.secondToTime(FileDurationUtil.getDuration(f.getPath()) / 1000);
-                            info.size = "大小:" + FileSizeUtil.getAutoFileOrFilesSize(f.getPath());
-                            info.params = "参数:";
-                            info.lastModified = f.lastModified();
-                            ArrayList<String> cmdd = new ArrayList<>();
-                            cmdd.add("-i");
-                            cmdd.add(f.getPath());
-                            cmdd.add("-filter:a");
-                            cmdd.add("volumedetect");
-                            cmdd.add("-f");
-                            cmdd.add("null");
-                            cmdd.add("/dev/null");
-                            final String[] cmd = cmdd.toArray(new String[0]);
-                            getFileInfo(cmd, info, audioListAdapter, data);
-                            data.add(info);
-                        }
-                        Collections.sort(data, new FileComparator());
-                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-                            @Override
-                            public void run() {
-                                audioListAdapter.refresh(data);
-                                listDataSave.setDataList(Constant.AUDIO, data);
-                            }
-                        });
-                        listDataSave.setDataList(Constant.AUDIO, data);
-                    }
-                }
+                refreshMediaList(file, files, oldVideoData, videoList, videoListAdapter, Constant.VIDEO, videolListDataSave);
+                refreshMediaList(file, files, oldGifData, gifList, gifListAdapter, Constant.GIF, giflListDataSave);
+                refreshMediaList(file, files, oldAudioData, audioList, audioListAdapter, Constant.AUDIO, audioListDataSave);
+
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
@@ -182,9 +246,156 @@ public class ListFragment extends Fragment {
         }).start();
     }
 
+    private void refreshMediaList(File file, File[] files, List<MediaInfo> oldMediaInfoList, final List<MediaInfo> mediaInfoList, final MediaListAdapter mediaListAdapter, final String type, final ListDataSave listDataSave) {
+        if (lastModifiedTime == file.lastModified()) {
+            mediaInfoList.addAll(oldMediaInfoList);
+//            for (MediaInfo info : oldData) {
+//                LogUtils.d(Constant.TAG, " old type : " + info.getType());
+//                if(info.getType().equals("mp4")
+//                        || info.getType().equals("wmv")
+//                        || info.getType().equals("avi")){
+//                    videoList.add(info);
+//                }else if(info.getType().equals("gif")){
+//                    gifList.add(info);
+//                }else{
+//                    audioList.add(info);
+//                }
+//            }
+            oldMediaInfoList.clear();
+        } else {
+            stilGetInfo = true;
+//                    String[] a = file.list();
+//                    if(a != null && a.length > 0){
+//                        for (String s:a) {
+//                            LogUtils.d(Constant.TAG, s);
+//                        }
+//                    }
+            if (files != null && files.length > 0) {
+                for (final File f : files) {
+//                    LogUtils.d(Constant.TAG, " name: " + f.getName());
+//                    LogUtils.d(Constant.TAG, " size: " + FileSizeUtil.getAutoFileOrFilesSize(f.getPath()));
+                    if ("0B".equals(FileSizeUtil.getAutoFileOrFilesSize(f.getPath()))) {
+//                                f.delete();
+                        continue;
+                    }
+                    if (getFileType(f.getPath()).equals("mp4")
+                            || getFileType(f.getPath()).equals("wmv")
+                            || getFileType(f.getPath()).equals("avi")) {
+                        try {
+                            int duration = FileDurationUtil.getDuration(f.getPath()) / 1000;
+                            if (TimeUtils.secondToTime(duration).contains("00:00:00")) {
+//                                    f.delete();
+                                continue;
+                            }
+                        } catch (Exception e) {
+//                                f.delete();
+                            continue;
+                        }
+                    }
+                    if (oldMediaInfoList != null && oldMediaInfoList.size() != 0) {
+//                                LogUtils.d(Constant.TAG, "oldData");
+                        boolean isContains = false;
+                        for (MediaInfo mediaInfo : oldMediaInfoList) {
+//                                    LogUtils.d(Constant.TAG, "MediaInfo");
+                            if (mediaInfo.getName().equals(f.getName())) {
+//                                        LogUtils.d(Constant.TAG, "continue");
+                                mediaInfoList.add(mediaInfo);
+                                isContains = true;
+                                break;
+                            }
+                        }
+                        if (isContains) {
+                            continue;
+                        }
+                    }
+//                    LogUtils.d(Constant.TAG, " type: " + f.getPath().substring(f.getPath().lastIndexOf(".") + 1));
+                    final MediaInfo info = new MediaInfo();
+//                            LogUtils.d(Constant.TAG, "yeah " + info.getName());
+                    info.setPath(f.getPath());
+                    info.name = f.getName();
+                    info.time = "时长:" + "00:00:00";
+//                    info.time = "时长:" + TimeUtils.secondToTime(FileDurationUtil.getDuration(f.getPath()) / 1000);
+                    info.size = "大小:" + FileSizeUtil.getAutoFileOrFilesSize(f.getPath());
+                    info.params = "参数:";
+                    info.type = getFileType(f.getPath());
+                    info.lastModified = f.lastModified();
+//                    LogUtils.d(Constant.TAG, " type :" + info.type);
+                    ArrayList<String> cmdd = new ArrayList<>();
+                    cmdd.add("-i");
+                    cmdd.add(f.getPath());
+                    cmdd.add("-filter:a");
+                    cmdd.add("volumedetect");
+                    cmdd.add("-f");
+                    cmdd.add("null");
+                    cmdd.add("/dev/null");
+                    final String[] cmd = cmdd.toArray(new String[0]);
+
+                    if (type.equals(Constant.VIDEO)) {
+                        if (info.type.equals("mp4")
+                                || info.type.equals("wmv")
+                                || info.type.equals("avi")) {
+                            getFileInfo(cmd, info, mediaListAdapter, mediaInfoList, type, listDataSave);
+                            mediaInfoList.add(info);
+                        }
+                    }
+                    if (type.equals(Constant.GIF)) {
+                        if (info.type.equals("gif")) {
+                            getFileInfo(cmd, info, mediaListAdapter, mediaInfoList, type, listDataSave);
+                            mediaInfoList.add(info);
+                        }
+                    }
+                    if (type.equals(Constant.AUDIO)) {
+                        if (info.type.equals("wav")
+                                || info.type.equals("wma")
+                                || info.type.equals("aac")
+                                || info.type.equals("m4a")
+                                || info.type.equals("mp3")
+                                || info.type.equals("flac")) {
+                            getFileInfo(cmd, info, mediaListAdapter, mediaInfoList, type, listDataSave);
+                            mediaInfoList.add(info);
+                        }
+                    }
+//                    if(info.type.equals("mp4")
+//                            || info.type.equals("wmv")
+//                            || info.type.equals("avi")){
+//                        getFileInfo(cmd, info, videoListAdapter, videoList);
+//                        videoList.add(info);
+//                    }else if(info.type.equals("gif")){
+//                        getFileInfo(cmd, info, gifListAdapter, gifList);
+//                        gifList.add(info);
+//                    }else{
+//                        getFileInfo(cmd, info, audioListAdapter, audioList);
+//                        audioList.add(info);
+//                    }
+//                            audioList.add(info);
+                }
+                Collections.sort(mediaInfoList, new FileComparator());
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mediaListAdapter.refresh(mediaInfoList);
+                        listDataSave.setDataList(type, mediaInfoList);
+                    }
+                });
+            }
+        }
+        if (mediaListAdapter.getItemCount() != 0) {
+            mActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    llEmpty.setVisibility(View.GONE);
+                }
+            });
+        }
+    }
+
+    private String getFileType(String path) {
+        return path.substring(path.lastIndexOf(".") + 1);
+    }
+
     private FFtask fFtask;
 
-    private void getFileInfo(final String[] cmd, final AudioInfo info, final AudioListAdapter audioListAdapter, final List<AudioInfo> data) {
+    private void getFileInfo(final String[] cmd, final MediaInfo info, final MediaListAdapter mediaListAdapter, final List<MediaInfo> data, final String type, final ListDataSave listDataSave) {
 //        if (!stilGetInfo){
 //            return;
 //        }
@@ -192,7 +403,7 @@ public class ListFragment extends Fragment {
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    getFileInfo(cmd, info, audioListAdapter, data);
+                    getFileInfo(cmd, info, mediaListAdapter, data, type, listDataSave);
                 }
             }, 100);
             return;
@@ -223,11 +434,9 @@ public class ListFragment extends Fragment {
                         info.setParams(info.getParams() + " " + hz + ",");
                     }
                     info.setParams(info.getParams() + " 立体声");
-//                            data.add(info);
-//                    Constant.allAudio = data;
                     if (!fFmpeg.isCommandRunning(fFtask)) {
-                        listDataSave.setDataList(Constant.AUDIO, data);
-                        audioListAdapter.refresh(data);
+                        listDataSave.setDataList(type, data);
+                        mediaListAdapter.refresh(data);
                     }
                 }
 
@@ -261,11 +470,11 @@ public class ListFragment extends Fragment {
     /**
      * 将文件按时间降序排列
      */
-    class FileComparator implements Comparator<AudioInfo> {
+    class FileComparator implements Comparator<MediaInfo> {
 
         @Override
-        public int compare(AudioInfo audioInfo1, AudioInfo audioInfo2) {
-            if (audioInfo1.getLastModified() < audioInfo2.getLastModified()) {
+        public int compare(MediaInfo mediaInfo1, MediaInfo mediaInfo2) {
+            if (mediaInfo1.getLastModified() < mediaInfo2.getLastModified()) {
                 return 1;// 最后修改的文件在前
             } else {
                 return -1;
@@ -293,6 +502,48 @@ public class ListFragment extends Fragment {
 //        bundle.putString(ARG_PARAM, str);
         fragment.setArguments(bundle);   //设置参数
         return fragment;
+    }
+
+    public void switchTab(int position) {
+        LogUtils.d(Constant.TAG, " switchTab position : " + position);
+        switch (position) {
+            case 3:
+                if (videoListAdapter == null || videoListAdapter.getItemCount() == 0) {
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            llVideo.performClick();
+                        }
+                    }, 500);
+                } else {
+                    llVideo.performClick();
+                }
+                break;
+            case 2:
+                if (gifListAdapter == null || gifListAdapter.getItemCount() == 0) {
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            llGif.performClick();
+                        }
+                    }, 500);
+                } else {
+                    llGif.performClick();
+                }
+                break;
+            case 1:
+                if (audioListAdapter == null || audioListAdapter.getItemCount() == 0) {
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            llAudio.performClick();
+                        }
+                    }, 500);
+                } else {
+                    llAudio.performClick();
+                }
+                break;
+        }
     }
 
 }

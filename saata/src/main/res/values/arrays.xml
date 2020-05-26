@@ -24,7 +24,7 @@
         <item>wav</item>
         <item>aac</item>
     </string-array>
-    <declare-styleable name="IndicatorView">
+    <declare-styleable name="ViewPagerIndicatorView">
         <attr name="indicator_icon" format="reference" />
         <attr name="indicator_margin" format="dimension" />
         <attr name="indicator_smooth" format="boolean" />

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:layout_height="80dp">
+
+    <ImageView
+        android:id="@+id/iv_func"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:src="@drawable/mine_icon" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="funcName"
+        android:textSize="12sp"
+        android:textColor="@color/home_item_text" />
+
+</LinearLayout>

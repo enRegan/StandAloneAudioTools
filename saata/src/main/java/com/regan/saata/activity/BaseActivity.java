@@ -25,9 +25,9 @@ import nl.bravobit.ffmpeg.FFmpeg;
 
 public class BaseActivity extends AppCompatActivity {
     private final static int CODE_REQUEST_WRITE_EXTERNAL = 0x100;
-    boolean isShowBack;
     ImageView ivBack;
     TextView tvTitle;
+    boolean isShowBack;
 
     public FFmpeg fFmpeg;
 

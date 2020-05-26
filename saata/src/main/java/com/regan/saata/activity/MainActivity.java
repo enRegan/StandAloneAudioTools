@@ -63,7 +63,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private MineFragment mineFragment;
 
     private LinearLayout llHome;
-    private RelativeLayout llList;
+    private LinearLayout llList;
     private LinearLayout llMine;
 
     private TextView tvHome;
@@ -264,39 +264,57 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         homeFragment = null;
         listFragment = null;
         mineFragment = null;
-//        llHome.performClick();
+        llHome.performClick();
     }
 
 
-    public void switchContent(View view) {
+    public void switchContent(View view, int postion) {
         Fragment fragment;
         if (view == llHome) {
             if (homeFragment == null) {
                 homeFragment = HomeFragment.newInstance();
             }
             fragment = homeFragment;
+            llHome.setBackgroundResource(R.drawable.home_buttom_selected);
+            llList.setBackgroundResource(R.color.transparent);
+            llMine.setBackgroundResource(R.color.transparent);
             tvHome.setTextColor(getResources().getColor(R.color.white));
-            tvMine.setTextColor(getResources().getColor(R.color.buttomTextColor));
-            ivHome.setImageResource(R.drawable.buttom_main_selected);
-            ivMine.setImageResource(R.drawable.buttom_mine_normal);
+            tvList.setTextColor(getResources().getColor(R.color.home_buttom_text));
+            tvMine.setTextColor(getResources().getColor(R.color.home_buttom_text));
+            ivHome.setImageResource(R.drawable.home_selected);
+            ivList.setImageResource(R.drawable.list_normal);
+            ivMine.setImageResource(R.drawable.mine_normal);
         } else if (view == llList) {
             if (listFragment == null) {
                 listFragment = ListFragment.newInstance();
             }
             fragment = listFragment;
-            tvHome.setTextColor(getResources().getColor(R.color.buttomTextColor));
-            tvMine.setTextColor(getResources().getColor(R.color.buttomTextColor));
-            ivHome.setImageResource(R.drawable.buttom_main_normal);
-            ivMine.setImageResource(R.drawable.buttom_mine_normal);
+            if (postion != 0) {
+                listFragment.switchTab(postion);
+            }
+            llHome.setBackgroundResource(R.color.transparent);
+            llList.setBackgroundResource(R.drawable.home_buttom_selected);
+            llMine.setBackgroundResource(R.color.transparent);
+            tvHome.setTextColor(getResources().getColor(R.color.home_buttom_text));
+            tvList.setTextColor(getResources().getColor(R.color.white));
+            tvMine.setTextColor(getResources().getColor(R.color.home_buttom_text));
+            ivHome.setImageResource(R.drawable.home_normal);
+            ivList.setImageResource(R.drawable.list_selected);
+            ivMine.setImageResource(R.drawable.mine_normal);
         } else if (view == llMine) {
             if (mineFragment == null) {
                 mineFragment = MineFragment.newInstance();
             }
             fragment = mineFragment;
-            tvHome.setTextColor(getResources().getColor(R.color.buttomTextColor));
+            llHome.setBackgroundResource(R.color.transparent);
+            llList.setBackgroundResource(R.color.transparent);
+            llMine.setBackgroundResource(R.drawable.home_buttom_selected);
+            tvHome.setTextColor(getResources().getColor(R.color.home_buttom_text));
+            tvList.setTextColor(getResources().getColor(R.color.home_buttom_text));
             tvMine.setTextColor(getResources().getColor(R.color.white));
-            ivHome.setImageResource(R.drawable.buttom_main_normal);
-            ivMine.setImageResource(R.drawable.buttom_mine_selected);
+            ivHome.setImageResource(R.drawable.home_normal);
+            ivMine.setImageResource(R.drawable.list_normal);
+            ivMine.setImageResource(R.drawable.mine_selected);
         } else {
             return;
         }
@@ -324,25 +342,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_home:
-                switchContent(llHome);
+                switchContent(llHome, 0);
                 break;
             case R.id.ll_list:
-                switchContent(llList);
+                switchContent(llList, 0);
                 break;
             case R.id.ll_mine:
-                switchContent(llMine);
+                switchContent(llMine, 0);
                 break;
             case R.id.btn_gif:
                 type = 1;
                 Matisse.from(this)
-                        .choose(MimeType.ofVideo())
+                        .choose(MimeType.of(MimeType.MP4))
                         .countable(true)
                         .maxSelectable(1)
+                        //是否只显示选择的类型的缩略图，就不会把所有图片视频都放在一起，而是需要什么展示什么
+                        .showSingleMediaType(true)
 //                        .addFilter(new GifSizeFilter(320, 320, 5 * Filter.K * Filter.K))
 //                        .gridExpectedSize(getResources().getDimensionPixelSize(R.dimen.grid_expected_size))
-                        .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
-                        .thumbnailScale(1f)
-                        .imageEngine(new PicassoEngine())
+                        .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+                        .thumbnailScale(0.8f)
+                        .imageEngine(new GlideEngine())
                         .showPreview(true) // Default is `true`
                         .forResult(PICK_VIDEO_REQUEST);
                 break;
@@ -363,64 +383,66 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-    public void switchList() {
-        switchContent(llList);
+    public void switchList(int position) {
+        switchContent(llList, position);
     }
 
     private final int PICK_VIDEO_REQUEST = 0x2;
-    List<Uri> mSelected;
+
+    //    List<Uri> mSelected;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         LogUtils.d(Constant.TAG, " MainActivity onActivityResult : " + requestCode);
-        if (requestCode == PICK_VIDEO_REQUEST && resultCode == RESULT_OK && null != data) {
-            mSelected = Matisse.obtainResult(data);
-            Uri selectedVideo = mSelected.get(0);
-            String[] filePathColumn = {MediaStore.Video.Media.DATA};
-
-//            Cursor cursor = mActivity.getContentResolver().query(selectedVideo,
-//                    filePathColumn, null, null, null);
-//            cursor.moveToFirst();
-            String path = "";
-            if (DocumentsContract.isDocumentUri(this, selectedVideo)) {
-                // 如果是document类型的Uri，则通过document id处理
-                String docId = DocumentsContract.getDocumentId(selectedVideo);
-                if ("com.android.providers.media.documents".equals(selectedVideo.getAuthority())) {
-                    String id = docId.split(":")[1]; // 解析出数字格式的id
-                    String selection = MediaStore.Video.Media._ID + "=" + id;
-                    path = getPathFromUri(this, MediaStore.Video.Media.EXTERNAL_CONTENT_URI, selection);
-                } else if ("com.android.providers.downloads.documents".equals(selectedVideo.getAuthority())) {
-                    Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(docId));
-                    path = getPathFromUri(this, contentUri, null);
-                }
-            } else if ("content".equalsIgnoreCase(selectedVideo.getScheme())) {
-                // 如果是content类型的Uri，则使用普通方式处理
-                path = getPathFromUri(this, selectedVideo, null);
-            } else if ("file".equalsIgnoreCase(selectedVideo.getScheme())) {
-                // 如果是file类型的Uri，直接获取图片路径即可
-                path = selectedVideo.getPath();
-            }
-            String mVideoPath = path;
-//            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-//            String mVideoPath = cursor.getString(columnIndex);
-//            mVideoPath = "/sdcard/Download/gamepp/KSP.mkv";
-//            cursor.close();
-//            String mOutPath = Constant.getMusicPath() + MediaTool.getVideoName(mVideoPath);
-            String mOutPath;
-            Intent intent;
-            if (type == 1) {
-                mOutPath = Constant.getMusicPath() + "gif_" + System.currentTimeMillis();
-                intent = new Intent(this, Video2GifActivity.class);
-            } else {
-                mOutPath = Constant.getMusicPath() + "视频转码_" + System.currentTimeMillis();
-                intent = new Intent(this, VideoTranscodeActivity.class);
-            }
-//            mOutPath = Constant.getMusicPath() + "音频提取_" + System.currentTimeMillis();
-            intent.putExtra("mVideoPath", mVideoPath);
-            intent.putExtra("mOutPath", mOutPath);
-//            startActivity(extract);
-            startActivityForResult(intent, MainActivity.CODE_TO_FUNC);
-        }
+        homeFragment.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == PICK_VIDEO_REQUEST && resultCode == RESULT_OK && null != data) {
+//            mSelected = Matisse.obtainResult(data);
+//            Uri selectedVideo = mSelected.get(0);
+//            String[] filePathColumn = {MediaStore.Video.Media.DATA};
+//
+////            Cursor cursor = mActivity.getContentResolver().query(selectedVideo,
+////                    filePathColumn, null, null, null);
+////            cursor.moveToFirst();
+//            String path = "";
+//            if (DocumentsContract.isDocumentUri(this, selectedVideo)) {
+//                // 如果是document类型的Uri，则通过document id处理
+//                String docId = DocumentsContract.getDocumentId(selectedVideo);
+//                if ("com.android.providers.media.documents".equals(selectedVideo.getAuthority())) {
+//                    String id = docId.split(":")[1]; // 解析出数字格式的id
+//                    String selection = MediaStore.Video.Media._ID + "=" + id;
+//                    path = getPathFromUri(this, MediaStore.Video.Media.EXTERNAL_CONTENT_URI, selection);
+//                } else if ("com.android.providers.downloads.documents".equals(selectedVideo.getAuthority())) {
+//                    Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(docId));
+//                    path = getPathFromUri(this, contentUri, null);
+//                }
+//            } else if ("content".equalsIgnoreCase(selectedVideo.getScheme())) {
+//                // 如果是content类型的Uri，则使用普通方式处理
+//                path = getPathFromUri(this, selectedVideo, null);
+//            } else if ("file".equalsIgnoreCase(selectedVideo.getScheme())) {
+//                // 如果是file类型的Uri，直接获取图片路径即可
+//                path = selectedVideo.getPath();
+//            }
+//            String mVideoPath = path;
+////            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+////            String mVideoPath = cursor.getString(columnIndex);
+////            mVideoPath = "/sdcard/Download/gamepp/KSP.mkv";
+////            cursor.close();
+////            String mOutPath = Constant.getFilePath() + MediaTool.getVideoName(mVideoPath);
+//            String mOutPath;
+//            Intent intent;
+//            if (type == 1) {
+//                mOutPath = Constant.getFilePath() + "gif_" + System.currentTimeMillis();
+//                intent = new Intent(this, Video2GifActivity.class);
+//            } else {
+//                mOutPath = Constant.getFilePath() + "视频转码_" + System.currentTimeMillis();
+//                intent = new Intent(this, VideoExtractActivity.class);
+//            }
+////            mOutPath = Constant.getFilePath() + "音频提取_" + System.currentTimeMillis();
+//            intent.putExtra("mVideoPath", mVideoPath);
+//            intent.putExtra("mOutPath", mOutPath);
+////            startActivity(extract);
+//            startActivityForResult(intent, MainActivity.CODE_TO_FUNC);
+//        }
     }
 
     /**

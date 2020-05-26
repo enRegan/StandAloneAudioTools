@@ -3,60 +3,45 @@ package com.regan.saata.fragment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.regan.saata.Constant;
 import com.regan.saata.R;
-import com.regan.saata.activity.VideoShowActivity;
 import com.regan.saata.activity.WebViewActivity;
-import com.regan.saata.adapter.FuncAdapter;
-import com.regan.saata.bean.FuncInfo;
+import com.regan.saata.adapter.MineAdapter;
+import com.regan.saata.bean.BaseItemInfo;
 import com.regan.saata.util.LogUtils;
-import com.regan.saata.util.SharedPrefrencesUtil;
+import com.regan.saata.view.MyContactDialog;
 import com.regan.saata.view.NiceImageView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class MineFragment extends Fragment implements View.OnClickListener {
     private RecyclerView rlFunc;
-    private TextView tvLogout;
-    private TextView tvName;
-    private TextView tvVipName, tvVipDec, tvOpenDec;
-    private ImageView ivOpenVip;
     private NiceImageView ivIcon;
-    private String userId;
-    private String memberType;
-    private LinearLayout llOpenVip;
-    private Dialog progressDialog;
 
     @Nullable
     @Override
@@ -73,63 +58,50 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     public void onAttach(Context context) {
         super.onAttach(context);
         mActivity = (Activity) context;
-//        mParam = getArguments().getString(ARG_PARAM);  //获取activity穿过来的参数
     }
 
     public static MineFragment newInstance() {
         MineFragment fragment = new MineFragment();
         Bundle bundle = new Bundle();
-//        bundle.putString(ARG_PARAM, str);
         fragment.setArguments(bundle);   //设置参数
         return fragment;
     }
 
     private void init(View root) {
-        tvName = root.findViewById(R.id.tv_name);
         ivIcon = root.findViewById(R.id.iv_icon);
-        tvVipName = root.findViewById(R.id.tv_vip_name);
-        tvVipDec = root.findViewById(R.id.tv_vip_dec);
-        tvOpenDec = root.findViewById(R.id.tv_open_dec);
-        llOpenVip = root.findViewById(R.id.ll_open_vip);
-        ivOpenVip = root.findViewById(R.id.iv_open_vip);
         rlFunc = root.findViewById(R.id.rl_func);
-        tvLogout = root.findViewById(R.id.tv_logout);
-        tvLogout.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
 
-        tvLogout.setOnClickListener(this);
-        ivIcon.setOnClickListener(this);
-        llOpenVip.setOnClickListener(null);
 
-        String loginTkoen = SharedPrefrencesUtil.getStringByKey(mActivity, SharedPrefrencesUtil.LOGIN_TOKEN);
-        if (!TextUtils.isEmpty(loginTkoen)) {
-            Constant.loginChange(true);
-        }
-
-        List<FuncInfo> list = new ArrayList<>();
-        FuncInfo custom = new FuncInfo();
+        List<BaseItemInfo> list = new ArrayList<>();
+        BaseItemInfo custom = new BaseItemInfo();
         custom.name = "联系客服";
-        custom.iconSrc = R.drawable.mine_custom;
+        custom.iconSrc = R.drawable.mine_cs;
         list.add(custom);
-        final FuncInfo agreement = new FuncInfo();
+        final BaseItemInfo agreement = new BaseItemInfo();
         agreement.name = "用户协议";
-        agreement.iconSrc = R.drawable.mine_agreement;
+        agreement.iconSrc = R.drawable.mine_proc;
         list.add(agreement);
-        FuncInfo safe = new FuncInfo();
+        BaseItemInfo safe = new BaseItemInfo();
         safe.name = "隐私政策";
         safe.iconSrc = R.drawable.mine_safe;
         list.add(safe);
-        FuncInfo version = new FuncInfo();
+        BaseItemInfo star = new BaseItemInfo();
+        star.name = "评论";
+        star.iconSrc = R.drawable.mine_star;
+        list.add(star);
+        BaseItemInfo version = new BaseItemInfo();
         version.name = "当前版本";
         version.iconSrc = R.drawable.mine_version;
         list.add(version);
-        FuncAdapter funcAdapter = new FuncAdapter(mActivity, list);
-        funcAdapter.setItemClickListener(new FuncAdapter.OnItemClickListener() {
+        MineAdapter mineAdapter = new MineAdapter(mActivity, list);
+        mineAdapter.setItemClickListener(new MineAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 LogUtils.d(Constant.TAG, " position : " + position);
                 switch (position) {
                     case 0:
-                        startActivity(new Intent(mActivity, VideoShowActivity.class));
+                        Dialog myContactDialog = new MyContactDialog().getContactDialog(mActivity);
+                        myContactDialog.show();
                         break;
                     case 1:
                         Intent agr = new Intent(mActivity, WebViewActivity.class);
@@ -143,6 +115,33 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                         break;
                     case 3:
 //                        run();
+//                        try {
+//                            PackageManager packageManager = mActivity.getPackageManager();
+//                            PackageInfo packageInfo = packageManager.getPackageInfo(mActivity.getPackageName(), 0);
+//                            String version = packageInfo.versionName;
+//                            Toast.makeText(mActivity, "当前版本：" + version, Toast.LENGTH_LONG).show();
+//                        } catch (PackageManager.NameNotFoundException e) {
+//                            e.printStackTrace();
+//                        }
+                        try {
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse("market://search?q=" + getActivity().getPackageName()));
+                            startActivity(i);
+                        } catch (Exception e) {
+                            Toast.makeText(getActivity(), "您的手机没有安装Android应用市场", Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+//                        try{
+//                            Uri uri = Uri.parse("market://details?id=" + getActivity().getPackageName());
+//                            Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+//                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                            startActivity(intent);
+//                        }catch(Exception e){
+//                            Toast.makeText(getActivity(), "您的手机没有安装Android应用市场", Toast.LENGTH_SHORT).show();
+//                            e.printStackTrace();
+//                        }
+                        break;
+                    case 4:
                         try {
                             PackageManager packageManager = mActivity.getPackageManager();
                             PackageInfo packageInfo = packageManager.getPackageInfo(mActivity.getPackageName(), 0);
@@ -156,27 +155,8 @@ public class MineFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        rlFunc.setAdapter(funcAdapter);
-        rlFunc.setLayoutManager(new GridLayoutManager(mActivity, 3));
-
-//        httpManager = new HttpManager(mActivity);
-
-//        httpManager.authCheck(new HttpRequest.ILoadFinish<String>() {
-//            @Override
-//            public void success(String message) {
-//                LogUtils.d(Constant.TAG, " authCheck : " + message);
-//            }
-//
-//            @Override
-//            public void fail(Throwable e) {
-//
-//            }
-//
-//            @Override
-//            public void fail(String errorMsg) {
-//
-//            }
-//        });
+        rlFunc.setAdapter(mineAdapter);
+        rlFunc.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
 
     }
 
@@ -213,15 +193,54 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.tv_logout:
-                logout();
-                break;
             case R.id.iv_icon:
                 break;
         }
     }
 
-    private void logout() {
-    }
+    /**
+     * 获取已安装应用商店的包名列表
+     * 获取有在AndroidManifest 里面注册<category android:name="android.intent.category.APP_MARKET" />的app
+     *
+     * @param context
+     * @return
+     */
+    public ArrayList<String> getInstallAppMarkets(Context context) {
+        //默认的应用市场列表，有些应用市场没有设置APP_MARKET通过隐式搜索不到
+        ArrayList<String> pkgList = new ArrayList<>();
+        pkgList.add("com.xiaomi.market");
+        pkgList.add("com.qihoo.appstore");
+        pkgList.add("com.wandoujia.phoenix2");
+        pkgList.add("com.tencent.android.qqdownloader");
+        pkgList.add("com.taptap");
+        ArrayList<String> pkgs = new ArrayList<String>();
+        if (context == null)
+            return pkgs;
+        Intent intent = new Intent();
+        intent.setAction("android.intent.action.MAIN");
+        intent.addCategory("android.intent.category.APP_MARKET");
+        PackageManager pm = context.getPackageManager();
+        List<ResolveInfo> infos = pm.queryIntentActivities(intent, 0);
+        if (infos == null || infos.size() == 0)
+            return pkgs;
+        int size = infos.size();
+        for (int i = 0; i < size; i++) {
+            String pkgName = "";
+            try {
+                ActivityInfo activityInfo = infos.get(i).activityInfo;
+                pkgName = activityInfo.packageName;
 
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (!TextUtils.isEmpty(pkgName))
+                pkgs.add(pkgName);
+
+        }
+        //取两个list并集,去除重复
+        pkgList.removeAll(pkgs);
+        pkgs.addAll(pkgList);
+        return pkgs;
+    }
 }

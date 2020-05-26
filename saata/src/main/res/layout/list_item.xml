@@ -2,32 +2,46 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginBottom="20dp"
-    android:layout_height="100dp">
+    android:layout_marginBottom="5dp"
+    android:layout_height="200dp"
+    android:padding="15dp"
+    android:background="@drawable/list_item_bg">
 
-    <com.regan.saata.view.NiceImageView
+    <RelativeLayout
+        android:id="@+id/rl_top"
         android:layout_width="match_parent"
-        android:layout_height="83dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_alignParentBottom="true"
-        android:src="@drawable/audio_list_item_bg"
-        app:corner_radius="5dp"
-        android:scaleType="centerCrop" />
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/list_item_icon">
 
-    <ImageView
-        android:id="@+id/iv_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="83dp"
-        android:layout_marginLeft="25dp"
-        android:src="@drawable/list_icon"
-        android:scaleType="fitCenter" />
+        <ImageView
+            android:id="@+id/iv_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/list_video_icon" />
+
+        <TextView
+            android:id="@+id/tv_item_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/iv_icon"
+            android:textSize="11sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textColor="@color/white"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="6dp"
+            android:text="time" />
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/iv_more"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginRight="30dp"
         android:layout_marginBottom="10dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
@@ -35,11 +49,11 @@
         android:scaleType="center" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="83dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_toLeftOf="@id/iv_more"
-        android:layout_toRightOf="@+id/iv_icon"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@id/rl_top"
         android:layout_marginLeft="10dp"
         android:gravity="center_vertical"
         android:orientation="vertical">
@@ -48,17 +62,28 @@
             android:id="@+id/tv_item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="17sp"
+            android:textSize="14sp"
             android:maxLines="1"
             android:ellipsize="end"
-            android:textColor="@color/white"
+            android:textColor="@color/text_333"
+            android:textStyle="bold"
             android:text="audio_name" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:orientation="horizontal">
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_item_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="11sp"
+                android:textColor="@color/text_666"
+                android:text="audio_type" />
 
             <TextView
                 android:id="@+id/tv_item_size"
@@ -67,29 +92,9 @@
                 android:textSize="11sp"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:textColor="@color/whiteAlpha30"
+                android:textColor="@color/text_666"
                 android:text="audio_size" />
-
-            <TextView
-                android:id="@+id/tv_item_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:textSize="11sp"
-                android:textColor="@color/whiteAlpha30"
-                android:text="audio_time" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_item_params"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="11sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:textColor="@color/whiteAlpha30"
-            android:text="audio_params" />
     </LinearLayout>
 </RelativeLayout>

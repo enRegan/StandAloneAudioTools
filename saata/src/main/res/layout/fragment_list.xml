@@ -3,26 +3,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_audio"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="60dp">
-        <!--android:layout_below="@+id/rl_top"-->
-
-    </androidx.recyclerview.widget.RecyclerView>
-
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center"
-        android:text="音频列表"
-        android:background="@color/titleBg"
+        android:text="转换列表"
         android:textColor="@color/title"
         android:textSize="17sp" />
 
+    <ImageView
+        android:id="@+id/iv_del"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/list_del"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp" />
+
     <LinearLayout
+        android:id="@+id/ll_addres"
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:gravity="center_vertical"
@@ -49,9 +49,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:textColor="@color/save_src"
+            android:textColor="@color/white"
             android:textSize="12sp"
-            android:text="内部存储目录/audiotools/music" />
+            android:text="内部存储目录/videotools/transcode" />
     </LinearLayout>
     <!--<ScrollView-->
     <!--android:layout_width="match_parent"-->
@@ -73,4 +73,137 @@
     <!--</LinearLayout>-->
 
     <!--</ScrollView>-->
+    <RelativeLayout
+        android:id="@+id/a"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/ll_addres"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="22dp"
+        android:background="@drawable/mine_bg">
+
+        <LinearLayout
+            android:id="@+id/ll_tab"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_height="50dp">
+
+            <LinearLayout
+                android:id="@+id/ll_video"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_video"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:text="转视频"
+                    android:textColor="@color/list_tab_selected" />
+
+                <View
+                    android:id="@+id/v_video"
+                    android:layout_width="80dp"
+                    android:layout_height="2dp"
+                    android:background="@color/list_tab_selected" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_gif"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_gif"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:text="转gif"
+                    android:textColor="@color/text_666" />
+
+                <View
+                    android:id="@+id/v_gif"
+                    android:layout_width="80dp"
+                    android:layout_height="2dp"
+                    android:background="@color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_audio"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_audio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:text="转其他"
+                    android:textColor="@color/text_666" />
+
+                <View
+                    android:id="@+id/v_audio"
+                    android:layout_width="80dp"
+                    android:layout_height="2dp"
+                    android:background="@color/white" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_audio"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/ll_tab"
+            android:paddingBottom="60dp"
+            android:visibility="gone">
+            <!--android:layout_below="@+id/rl_top"-->
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_gif"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/ll_tab"
+            android:paddingBottom="60dp"
+            android:visibility="gone">
+            <!--android:layout_below="@+id/rl_top"-->
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_video"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/ll_tab"
+            android:paddingBottom="60dp"
+            android:visibility="visible">
+            <!--android:layout_below="@+id/rl_top"-->
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <include
+            android:id="@+id/ll_empty"
+            layout="@layout/list_empty"
+            android:visibility="visible" />
+    </RelativeLayout>
 </RelativeLayout>

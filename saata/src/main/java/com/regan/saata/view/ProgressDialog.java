@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -18,6 +20,7 @@ public class ProgressDialog extends Dialog {
     public Context mContext;
     public FFmpeg fFmpeg;
     public FfmpegKill ffmpegKill;
+    private ImageView ivClose;
 
     public ProgressDialog(Context context) {
         super(context);
@@ -52,9 +55,18 @@ public class ProgressDialog extends Dialog {
             progressDialog.setContentView(R.layout.progress_dialog);
             progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
             progressBar = progressDialog.findViewById(R.id.pb_progress);
+            ivClose = progressDialog.findViewById(R.id.iv_close);
             progressBar.setProgress(0);
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.setCancelable(false);
+            ivClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    progressDialog.dismiss();
+                    currentBackPressedTime = 0;
+                    ffmpegKill.kill();
+                }
+            });
             progressDialog.setOnKeyListener(new OnKeyListener() {
                 @Override
                 public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
@@ -67,32 +79,10 @@ public class ProgressDialog extends Dialog {
                             currentBackPressedTime = 0;
                             ffmpegKill.kill();
                         }
-//                        if(progressDialog.isShowing()){
-//                        }
                         return true;
                     }
 
                     return false;
-//                        if (System.currentTimeMillis() - currentBackPressedTime > BACK_PRESSED_INTERVAL) {
-//                            currentBackPressedTime = System.currentTimeMillis();
-//                            Toast.makeText(mContext, "再次点击结束任务", Toast.LENGTH_SHORT).show();
-//                        } else {
-//                            // 退出
-//                            fFmpeg.killRunningProcesses();
-//                            progressDialog.dismiss();
-//                            currentBackPressedTime = 0;
-//                        }
-//                    if(progressDialog.isShowing()){
-//                        if (System.currentTimeMillis() - currentBackPressedTime > BACK_PRESSED_INTERVAL) {
-//                            currentBackPressedTime = System.currentTimeMillis();
-//                            Toast.makeText(mContext, "再次点击结束任务", Toast.LENGTH_SHORT).show();
-//                        } else {
-//                            // 退出
-//                            fFmpeg.killRunningProcesses();
-//                            progressDialog.dismiss();
-//                            currentBackPressedTime = 0;
-//                        }
-//                    }
                 }
             });
         }

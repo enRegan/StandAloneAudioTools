@@ -12,6 +12,7 @@ public class VideoInfo implements Serializable {
     public String size;
     public String time;
     public String params;
+    public String type;
     public long lastModified;
 
     public int getId() {
@@ -62,6 +63,14 @@ public class VideoInfo implements Serializable {
         this.params = params;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public long getLastModified() {
         return lastModified;
     }
@@ -77,6 +86,7 @@ public class VideoInfo implements Serializable {
                 + " \nsize : " + FileSizeUtil.getAutoFileOrFilesSize(path)
                 + " \ntime : " + TimeUtils.secondToTime(Long.parseLong(time) / 1000)
                 + " \nparams : " + params
+                + " \ntype : " + type
                 + " \nlastModified : " + lastModified;
     }
 

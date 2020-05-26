@@ -9,7 +9,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="150dp"
         android:src="@drawable/null_record" />
 
     <TextView
@@ -18,5 +18,5 @@
         android:layout_height="wrap_content"
         android:text="暂无记录"
         android:textSize="14sp"
-        android:textColor="@color/white" />
+        android:textColor="@color/text_333" />
 </LinearLayout>
