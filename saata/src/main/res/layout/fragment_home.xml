@@ -46,42 +46,44 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/home_item_1"
+                android:background="@drawable/home_item_01"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp">
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20dp">
 
-                    <LinearLayout
+                <LinearLayout
+                    android:id="@+id/ll_audio"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center">
+
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="center">
+                        android:src="@drawable/group_audio"
+                        android:layout_gravity="center" />
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/group_audio"
-                            android:layout_gravity="center" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="转音频"
-                            android:textColor="@color/white" />
-                    </LinearLayout>
-                </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="转音频"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white" />
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_audio"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true">
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="45dp"
+                    android:layout_toRightOf="@id/ll_audio">
 
                 </androidx.recyclerview.widget.RecyclerView>
             </RelativeLayout>
@@ -89,44 +91,45 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/home_item_22"
+                android:background="@drawable/home_item_02"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp">
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20dp">
 
-                    <LinearLayout
+                <LinearLayout
+                    android:id="@+id/ll_gif"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center">
+
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="center">
+                        android:src="@drawable/group_gif"
+                        android:layout_gravity="center" />
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/group_audio"
-                            android:layout_gravity="center" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="转GIF"
-                            android:textColor="@color/white" />
-                    </LinearLayout>
-                </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="转GIF"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white" />
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_gif"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true">
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="45dp"
+                    android:layout_toRightOf="@id/ll_gif">
 
                 </androidx.recyclerview.widget.RecyclerView>
             </RelativeLayout>
@@ -134,341 +137,48 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/home_item_1"
+                android:background="@drawable/home_item_03"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp">
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                <LinearLayout
+                    android:id="@+id/ll_video"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="20dp">
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center">
 
-                    <LinearLayout
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="center">
+                        android:src="@drawable/group_other"
+                        android:layout_gravity="center" />
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/group_audio"
-                            android:layout_gravity="center" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="转其他格式"
-                            android:textColor="@color/white" />
-                    </LinearLayout>
-                </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="转其他格式"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white" />
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_video"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true">
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="45dp"
+                    android:layout_toRightOf="@id/ll_video">
 
                 </androidx.recyclerview.widget.RecyclerView>
             </RelativeLayout>
-
-            <!--<LinearLayout-->
-            <!--android:id="@+id/ll_audio_f_video"-->
-            <!--android:orientation="horizontal"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="83dp"-->
-            <!--android:background="@drawable/main_bg_1"-->
-            <!--android:layout_marginBottom="15dp"-->
-            <!--android:layout_marginLeft="15dp"-->
-            <!--android:layout_marginRight="15dp"-->
-            <!--android:gravity="center">-->
-
-            <!--<ImageView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:src="@drawable/audio_f_video"-->
-            <!--android:layout_marginLeft="20dp"-->
-            <!--android:layout_marginRight="20dp" />-->
-
-            <!--<LinearLayout-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:orientation="vertical"-->
-            <!--android:layout_weight="1">-->
-
-            <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="音频提取"-->
-            <!--android:textColor="@color/white"-->
-            <!--android:textSize="17sp" />-->
-
-            <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="视频中提取音频"-->
-            <!--android:textColor="@color/title"-->
-            <!--android:textSize="12sp" />-->
-
-            <!--</LinearLayout>-->
-
-            <!--<ImageView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginRight="30dp"-->
-            <!--android:layout_marginLeft="10dp"-->
-            <!--android:src="@drawable/arrow_right" />-->
-
-            <!--</LinearLayout>-->
-
-            <!--<LinearLayout-->
-            <!--android:id="@+id/ll_audio_trans"-->
-            <!--android:orientation="horizontal"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="83dp"-->
-            <!--android:background="@drawable/main_bg_2"-->
-            <!--android:layout_marginBottom="15dp"-->
-            <!--android:layout_marginLeft="15dp"-->
-            <!--android:layout_marginRight="15dp"-->
-            <!--android:gravity="center">-->
-
-            <!--<ImageView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:src="@drawable/audio_trans"-->
-            <!--android:layout_marginLeft="20dp"-->
-            <!--android:layout_marginRight="20dp" />-->
-
-            <!--<LinearLayout-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:orientation="vertical"-->
-            <!--android:layout_weight="1">-->
-
-            <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="音频转换"-->
-            <!--android:textColor="@color/white"-->
-            <!--android:textSize="17sp" />-->
-
-            <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="转换音频格式"-->
-            <!--android:textColor="@color/title"-->
-            <!--android:textSize="12sp" />-->
-
-            <!--</LinearLayout>-->
-
-            <!--<ImageView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginRight="30dp"-->
-            <!--android:layout_marginLeft="10dp"-->
-            <!--android:src="@drawable/arrow_right" />-->
-
-            <!--</LinearLayout>-->
-
-            <!--<LinearLayout-->
-            <!--android:id="@+id/ll_audio_cut"-->
-            <!--android:orientation="horizontal"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="83dp"-->
-            <!--android:background="@drawable/main_bg_3"-->
-            <!--android:layout_marginBottom="15dp"-->
-            <!--android:layout_marginLeft="15dp"-->
-            <!--android:layout_marginRight="15dp"-->
-            <!--android:gravity="center">-->
-
-            <!--<ImageView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:src="@drawable/audio_cut"-->
-            <!--android:layout_marginLeft="20dp"-->
-            <!--android:layout_marginRight="20dp" />-->
-
-            <!--<LinearLayout-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:orientation="vertical"-->
-            <!--android:layout_weight="1">-->
-
-            <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="音频裁剪"-->
-            <!--android:textColor="@color/white"-->
-            <!--android:textSize="17sp" />-->
-
-            <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="裁剪音频长短"-->
-            <!--android:textColor="@color/title"-->
-            <!--android:textSize="12sp" />-->
-
-            <!--</LinearLayout>-->
-
-            <!--<ImageView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginRight="30dp"-->
-            <!--android:layout_marginLeft="10dp"-->
-            <!--android:src="@drawable/arrow_right" />-->
-
-            <!--</LinearLayout>-->
-
-            <!--<LinearLayout-->
-            <!--android:id="@+id/ll_audio_volume"-->
-            <!--android:orientation="horizontal"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="83dp"-->
-            <!--android:background="@drawable/main_bg_4"-->
-            <!--android:layout_marginBottom="15dp"-->
-            <!--android:layout_marginLeft="15dp"-->
-            <!--android:layout_marginRight="15dp"-->
-            <!--android:gravity="center">-->
-
-            <!--<ImageView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:src="@drawable/audio_volume"-->
-            <!--android:layout_marginLeft="20dp"-->
-            <!--android:layout_marginRight="20dp" />-->
-
-            <!--<LinearLayout-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:orientation="vertical"-->
-            <!--android:layout_weight="1">-->
-
-            <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="音量调整"-->
-            <!--android:textColor="@color/white"-->
-            <!--android:textSize="17sp" />-->
-
-            <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="调整音频音量"-->
-            <!--android:textColor="@color/title"-->
-            <!--android:textSize="12sp" />-->
-
-            <!--</LinearLayout>-->
-
-            <!--<ImageView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginRight="30dp"-->
-            <!--android:layout_marginLeft="10dp"-->
-            <!--android:src="@drawable/arrow_right" />-->
-
-            <!--</LinearLayout>-->
-
-            <!--<LinearLayout-->
-            <!--android:id="@+id/ll_audio_speed"-->
-            <!--android:orientation="horizontal"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="83dp"-->
-            <!--android:background="@drawable/main_bg_1"-->
-            <!--android:layout_marginBottom="15dp"-->
-            <!--android:layout_marginLeft="15dp"-->
-            <!--android:layout_marginRight="15dp"-->
-            <!--android:gravity="center">-->
-
-            <!--<ImageView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:src="@drawable/audio_speed"-->
-            <!--android:layout_marginLeft="20dp"-->
-            <!--android:layout_marginRight="20dp" />-->
-
-            <!--<LinearLayout-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:orientation="vertical"-->
-            <!--android:layout_weight="1">-->
-
-            <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="音量调速"-->
-            <!--android:textColor="@color/white"-->
-            <!--android:textSize="17sp" />-->
-
-            <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="增加或减少播放速度"-->
-            <!--android:textColor="@color/title"-->
-            <!--android:textSize="12sp" />-->
-
-            <!--</LinearLayout>-->
-
-            <!--<ImageView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginRight="30dp"-->
-            <!--android:layout_marginLeft="10dp"-->
-            <!--android:src="@drawable/arrow_right" />-->
-
-            <!--</LinearLayout>-->
-
-            <!--<LinearLayout-->
-            <!--android:id="@+id/ll_audio_merge"-->
-            <!--android:orientation="horizontal"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="83dp"-->
-            <!--android:background="@drawable/main_bg_2"-->
-            <!--android:layout_marginBottom="15dp"-->
-            <!--android:layout_marginLeft="15dp"-->
-            <!--android:layout_marginRight="15dp"-->
-            <!--android:gravity="center">-->
-
-            <!--<ImageView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:src="@drawable/audio_merge"-->
-            <!--android:layout_marginLeft="20dp"-->
-            <!--android:layout_marginRight="20dp" />-->
-
-            <!--<LinearLayout-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:orientation="vertical"-->
-            <!--android:layout_weight="1">-->
-
-            <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="音频合并"-->
-            <!--android:textColor="@color/white"-->
-            <!--android:textSize="17sp" />-->
-
-            <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="多个音频合并成1个音频"-->
-            <!--android:textColor="@color/title"-->
-            <!--android:textSize="12sp" />-->
-
-            <!--</LinearLayout>-->
-
-            <!--<ImageView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginRight="30dp"-->
-            <!--android:layout_marginLeft="10dp"-->
-            <!--android:src="@drawable/arrow_right" />-->
-
-            <!--</LinearLayout>-->
 
         </LinearLayout>
     </ScrollView>

@@ -2,39 +2,16 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@android:id/background">
-        <bitmap android:src="@drawable/progressbar_2" />
-        <!--<shape>-->
-        <!--<corners android:radius="5dip" />-->
-        <!--<gradient-->
-        <!--android:startColor="@color/progress_dialog_bg"-->
-        <!--android:centerColor="@color/progress_dialog_bg"-->
-        <!--android:endColor="@color/progress_dialog_bg" />-->
-        <!--</shape>-->
+        <shape>
+            <solid android:color="@color/progressbar_bg" />
+            <corners android:radius="15dp" />
+        </shape>
     </item>
 
-    <!--<item android:id="@android:id/secondaryProgress">-->
-    <!--<clip>-->
-    <!--<shape>-->
-    <!--<corners android:radius="5dip" />-->
-    <!--<gradient-->
-    <!--android:startColor="#80ffd300"-->
-    <!--android:centerColor="#80ffb600"-->
-    <!--android:endColor="#a0ffcb00" />-->
-    <!--</shape>-->
-    <!--</clip>-->
-    <!--</item>-->
 
     <item android:id="@android:id/progress">
         <clip>
-            <!--<shape>-->
-            <!--<corners android:radius="5dip" />-->
-            <!--<gradient-->
-            <!--android:startColor="@color/progress_left"-->
-            <!--android:endColor="@color/progress_right"-->
-            <!--/>-->
-
-            <!--</shape>-->
-            <bitmap android:src="@drawable/progressbar_1" />
+            <bitmap android:src="@drawable/progress_1" />
         </clip>
     </item>
 </layer-list>

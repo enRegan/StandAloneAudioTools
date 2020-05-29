@@ -25,9 +25,11 @@ import android.widget.VideoView;
 
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
 import com.regan.saata.Constant;
 import com.regan.saata.R;
 import com.regan.saata.util.FileDurationUtil;
+import com.regan.saata.util.FileManager;
 import com.regan.saata.util.LogUtils;
 import com.regan.saata.util.MediaTool;
 import com.regan.saata.util.TimeUtils;
@@ -43,7 +45,7 @@ public class VideoExtractActivity extends BaseFunctionActivity implements View.O
     private String mVideoPath, mOutPath, mOutType;
     private Button btnStartTranscode;
     private float mVideoTime;
-    private VideoView videoView;
+    //    private VideoView videoView;
     private TextView tvName, tvContent;
     private ImageView ivStart, ivPreview;
     private LinearLayout llSetRate;
@@ -52,6 +54,8 @@ public class VideoExtractActivity extends BaseFunctionActivity implements View.O
     private TextView tvBit;
     private String rate;
     private String bit;
+    private int ratePosition = 0;
+    private int bitPosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +63,9 @@ public class VideoExtractActivity extends BaseFunctionActivity implements View.O
         setContentView(R.layout.activity_video_extract);
         tvTitle = findViewById(R.id.tv_title);
         tvTitle.setText("视频转音频");
+        ivBack = findViewById(R.id.iv_back);
         btnStartTranscode = findViewById(R.id.btn_start_transcode);
-        videoView = findViewById(R.id.vv_video);
+//        videoView = findViewById(R.id.vv_video);
         tvName = findViewById(R.id.tv_name);
         tvContent = findViewById(R.id.tv_content);
         ivPreview = findViewById(R.id.iv_preview);
@@ -74,35 +79,38 @@ public class VideoExtractActivity extends BaseFunctionActivity implements View.O
             mVideoPath = getIntent().getStringExtra("mVideoPath");
             mOutPath = getIntent().getStringExtra("mOutPath");
             mOutType = getIntent().getStringExtra("mOutType");
+            tvTitle.setText("视频转" + mOutType);
             mVideoTime = FileDurationUtil.getDuration(mVideoPath);
             LogUtils.d(Constant.TAG, " mVideoPath : " + mVideoPath + " mOutPath : " + mOutPath);
-            videoView.setVideoPath(mVideoPath);
-            final Bitmap videoFrame = MediaTool.getVideoFrame(mVideoPath, 1);
-            ivPreview.setImageBitmap(videoFrame);
+//            videoView.setVideoPath(mVideoPath);
+//            final Bitmap videoFrame = MediaTool.getVideoFrame(mVideoPath, 1);
+//            ivPreview.setImageBitmap(videoFrame);
+            Glide.with(this).load(mVideoPath).into(ivPreview);
             tvName.setText(mVideoPath.substring(mVideoPath.lastIndexOf("/"), mVideoPath.length()));
             tvContent.setText(TimeUtils.secondToTime(FileDurationUtil.getDuration(mVideoPath) / 1000));
             //创建MediaController对象
-            MediaController mediaController = new MediaController(this);
-            mediaController.setVisibility(View.INVISIBLE);
-            //VideoView与MediaController建立关联
-            videoView.setMediaController(mediaController);
-
-            //让VideoView获取焦点
-            videoView.requestFocus();
+//            MediaController mediaController = new MediaController(this);
+//            mediaController.setVisibility(View.INVISIBLE);
+//            //VideoView与MediaController建立关联
+//            videoView.setMediaController(mediaController);
+//
+//            //让VideoView获取焦点
+//            videoView.requestFocus();
         }
         ivStart.setOnClickListener(this);
-        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                LogUtils.d(Constant.TAG, " mp " + mp.isPlaying());
-                ivStart.setVisibility(View.VISIBLE);
-            }
-        });
+//        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//            @Override
+//            public void onCompletion(MediaPlayer mp) {
+//                LogUtils.d(Constant.TAG, " mp " + mp.isPlaying());
+//                ivStart.setVisibility(View.VISIBLE);
+//            }
+//        });
         rate = "";
         bit = "";
         btnStartTranscode.setOnClickListener(this);
         llSetRate.setOnClickListener(this);
         llSetBit.setOnClickListener(this);
+        ivBack.setOnClickListener(this);
     }
 
     @Override
@@ -114,9 +122,10 @@ public class VideoExtractActivity extends BaseFunctionActivity implements View.O
                 break;
             case R.id.iv_video_start:
                 LogUtils.d(Constant.TAG, "videoView start");
-                ivPreview.setVisibility(View.GONE);
+//                ivPreview.setVisibility(View.GONE);
                 ivStart.setVisibility(View.GONE);
-                videoView.start();
+                FileManager.openFile(VideoExtractActivity.this, mVideoPath, "mp4");
+//                videoView.start();
                 break;
             case R.id.ll_set_rate:
                 LogUtils.d(Constant.TAG, "ll_set_rate");
@@ -125,16 +134,51 @@ public class VideoExtractActivity extends BaseFunctionActivity implements View.O
                 //设置弹出位置
                 setRateDialogWindow.setGravity(Gravity.BOTTOM);
                 setRateDialog.setCanceledOnTouchOutside(false);
-                setRateDialog.setData(2);
+                setRateDialog.setData(2, ratePosition);
                 setRateDialog.setDialogListener(new MySetDialog.DialogListener() {
                     @Override
-                    public void getResult(final String result) {
+                    public void getResult(final int result) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (!TextUtils.isEmpty(result)) {
-                                    tvRate.setText(result);
-                                    rate = result;
+                                ratePosition = result;
+                                switch (result) {
+                                    case 0:
+                                        rate = "96000";
+                                        if (mOutType.equals("mp3")) {
+                                            ratePosition = 1;
+                                            rate = "48000";
+                                            tvRate.setText(rate);
+                                            Toast.makeText(VideoExtractActivity.this, "该格式采样率最大支持48000", Toast.LENGTH_SHORT).show();
+                                        }
+                                        if (mOutType.equals("wma")) {
+                                            ratePosition = 1;
+                                            rate = "48000";
+                                            tvRate.setText(rate);
+                                            Toast.makeText(VideoExtractActivity.this, "该格式采样率最大支持48000", Toast.LENGTH_SHORT).show();
+                                        }
+                                        tvRate.setText(rate);
+                                        break;
+                                    case 1:
+                                        rate = "48000";
+                                        tvRate.setText(rate);
+                                        break;
+                                    case 2:
+                                        rate = "44100";
+                                        tvRate.setText(rate);
+                                        break;
+                                    case 3:
+                                        rate = "32000";
+                                        tvRate.setText(rate);
+                                        break;
+                                    case 4:
+                                        rate = "11025";
+                                        tvRate.setText(rate);
+                                        break;
+                                    case 5:
+                                        rate = "8000";
+                                        tvRate.setText(rate);
+                                        break;
                                 }
                             }
                         });
@@ -156,16 +200,39 @@ public class VideoExtractActivity extends BaseFunctionActivity implements View.O
                 //设置弹出位置
                 setBitDialogWindow.setGravity(Gravity.BOTTOM);
                 setBitDialog.setCanceledOnTouchOutside(false);
-                setBitDialog.setData(3);
+                setBitDialog.setData(3, bitPosition);
                 setBitDialog.setDialogListener(new MySetDialog.DialogListener() {
                     @Override
-                    public void getResult(final String result) {
+                    public void getResult(final int result) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (!TextUtils.isEmpty(result)) {
-                                    tvBit.setText(result);
-                                    bit = result;
+                                bitPosition = result;
+                                switch (result) {
+                                    case 0:
+                                        bit = "320k";
+                                        tvBit.setText(bit);
+                                        break;
+                                    case 1:
+                                        bit = "256k";
+                                        tvBit.setText(bit);
+                                        break;
+                                    case 2:
+                                        bit = "224k";
+                                        tvBit.setText(bit);
+                                        break;
+                                    case 3:
+                                        bit = "192k";
+                                        tvBit.setText(bit);
+                                        break;
+                                    case 4:
+                                        bit = "160k";
+                                        tvBit.setText(bit);
+                                        break;
+                                    case 5:
+                                        bit = "32k";
+                                        tvBit.setText(bit);
+                                        break;
                                 }
                             }
                         });
@@ -178,6 +245,9 @@ public class VideoExtractActivity extends BaseFunctionActivity implements View.O
                 android.view.WindowManager.LayoutParams params2 = setBitDialog.getWindow().getAttributes(); //获取对话框当前的参数值、
                 params2.width = (int) (d2.getWidth()); //宽度设置全屏宽度
                 setBitDialog.getWindow().setAttributes(params2);
+                break;
+            case R.id.iv_back:
+                finish();
                 break;
         }
     }
@@ -231,6 +301,7 @@ public class VideoExtractActivity extends BaseFunctionActivity implements View.O
                             Intent intent = new Intent(VideoExtractActivity.this, SuccessActivity.class);
                             intent.putExtra("toList", true);
                             intent.putExtra("mVideoPath", outFile);
+                            intent.putExtra("mOutType", outType);
                             startActivityForResult(intent, MainActivity.CODE_TO_FUNC);
                         }
                     }, 100);
@@ -241,9 +312,8 @@ public class VideoExtractActivity extends BaseFunctionActivity implements View.O
                     if (!TextUtils.isEmpty(message) && message.contains("time=") && message.contains("bitrate")) {
                         String time = message.substring(message.lastIndexOf("time=") + 5, message.lastIndexOf("bitrate"));
                         float d = (Constant.time2Float(time) * 1000) / mVideoTime;
-                        LogUtils.d(Constant.TAG, "onProgress : " + time);
-                        LogUtils.d(Constant.TAG, "onProgress : " + Constant.time2Float(time));
-                        LogUtils.d(Constant.TAG, "mVideoTime : " + mVideoTime);
+                        LogUtils.d(Constant.TAG, "onProgress time : " + time);
+                        LogUtils.d(Constant.TAG, "onProgress : " + d);
                         int progress = Double.valueOf(d * 100).intValue();
                         progressMsg = new Message();
                         progressMsg.arg1 = pMsg;
@@ -266,13 +336,14 @@ public class VideoExtractActivity extends BaseFunctionActivity implements View.O
                         progressDialog.dismiss();
                     }
                     if (!isKill) {
-//                        Toast.makeText(Video2GifActivity.this, "该音频不支持该参数，请修改后重试", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(VideoExtractActivity.this, "转换失败，请更换其他参数重试。", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onStart() {
                     Log.d(Constant.TAG, "execute onStart : ");
+                    LogUtils.d(Constant.TAG, "mVideoTime : " + mVideoTime);
 //                    btnStartTranscode.setEnabled(false);
 //                    progressDialog = new ProgressDialog(AudioTranscodeActivity.this).getProgressDialog();
                     progressDialog.show();

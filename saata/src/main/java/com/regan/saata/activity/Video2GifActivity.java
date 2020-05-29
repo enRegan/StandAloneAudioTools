@@ -26,9 +26,11 @@ import android.widget.VideoView;
 
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
 import com.regan.saata.Constant;
 import com.regan.saata.R;
 import com.regan.saata.util.FileDurationUtil;
+import com.regan.saata.util.FileManager;
 import com.regan.saata.util.LogUtils;
 import com.regan.saata.util.MediaTool;
 import com.regan.saata.util.TimeUtils;
@@ -44,21 +46,23 @@ public class Video2GifActivity extends BaseFunctionActivity implements View.OnCl
     private String mVideoPath, mOutPath, mOutType;
     private Button btnStartTranscode;
     private float mVideoTime;
-    private VideoView videoView;
+    //    private VideoView videoView;
     private TextView tvName, tvContent;
     private ImageView ivStart, ivPreview;
     private LinearLayout llSetSpeed;
     private TextView tvSpeed;
     private float speed;
+    private int position = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video2_gif);
+        ivBack = findViewById(R.id.iv_back);
         tvTitle = findViewById(R.id.tv_title);
         tvTitle.setText("视频转gif");
         btnStartTranscode = findViewById(R.id.btn_start_transcode);
-        videoView = findViewById(R.id.vv_video);
+//        videoView = findViewById(R.id.vv_video);
         tvName = findViewById(R.id.tv_name);
         tvContent = findViewById(R.id.tv_content);
         ivPreview = findViewById(R.id.iv_preview);
@@ -72,32 +76,34 @@ public class Video2GifActivity extends BaseFunctionActivity implements View.OnCl
             mOutType = getIntent().getStringExtra("mOutType");
             mVideoTime = FileDurationUtil.getDuration(mVideoPath);
             LogUtils.d(Constant.TAG, " mVideoPath : " + mVideoPath + " mOutPath : " + mOutPath);
-            videoView.setVideoPath(mVideoPath);
-            final Bitmap videoFrame = MediaTool.getVideoFrame(mVideoPath, 1);
-            ivPreview.setImageBitmap(videoFrame);
+//            videoView.setVideoPath(mVideoPath);
+//            final Bitmap videoFrame = MediaTool.getVideoFrame(mVideoPath, 1);
+//            ivPreview.setImageBitmap(videoFrame);
+            Glide.with(this).load(mVideoPath).into(ivPreview);
             tvName.setText(mVideoPath.substring(mVideoPath.lastIndexOf("/"), mVideoPath.length()));
             tvContent.setText(TimeUtils.secondToTime(FileDurationUtil.getDuration(mVideoPath) / 1000));
             //创建MediaController对象
-            MediaController mediaController = new MediaController(this);
-            mediaController.setVisibility(View.INVISIBLE);
-            //VideoView与MediaController建立关联
-            videoView.setMediaController(mediaController);
-
-            //让VideoView获取焦点
-            videoView.requestFocus();
+//            MediaController mediaController = new MediaController(this);
+//            mediaController.setVisibility(View.INVISIBLE);
+//            //VideoView与MediaController建立关联
+//            videoView.setMediaController(mediaController);
+//
+//            //让VideoView获取焦点
+//            videoView.requestFocus();
         }
         ivStart.setOnClickListener(this);
-        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                LogUtils.d(Constant.TAG, " mp " + mp.isPlaying());
-                ivStart.setVisibility(View.VISIBLE);
-            }
-        });
+//        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//            @Override
+//            public void onCompletion(MediaPlayer mp) {
+//                LogUtils.d(Constant.TAG, " mp " + mp.isPlaying());
+//                ivStart.setVisibility(View.VISIBLE);
+//            }
+//        });
         mOutType = "gif";
         speed = 1f;
         btnStartTranscode.setOnClickListener(this);
         llSetSpeed.setOnClickListener(this);
+        ivBack.setOnClickListener(this);
     }
 
     @Override
@@ -109,9 +115,10 @@ public class Video2GifActivity extends BaseFunctionActivity implements View.OnCl
                 break;
             case R.id.iv_video_start:
                 LogUtils.d(Constant.TAG, "videoView start");
-                ivPreview.setVisibility(View.GONE);
+//                ivPreview.setVisibility(View.GONE);
                 ivStart.setVisibility(View.GONE);
-                videoView.start();
+                FileManager.openFile(Video2GifActivity.this, mVideoPath, "mp4");
+//                videoView.start();
                 break;
             case R.id.ll_set_speed:
                 LogUtils.d(Constant.TAG, "ll_set_speed");
@@ -120,32 +127,35 @@ public class Video2GifActivity extends BaseFunctionActivity implements View.OnCl
                 //设置弹出位置
                 window.setGravity(Gravity.BOTTOM);
                 setDialog.setCanceledOnTouchOutside(false);
-                setDialog.setData(1);
+                setDialog.setData(1, position);
                 setDialog.setDialogListener(new MySetDialog.DialogListener() {
                     @Override
-                    public void getResult(final String result) {
+                    public void getResult(final int result) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (!TextUtils.isEmpty(result)) {
-                                    tvSpeed.setText(result);
-                                    switch (result) {
-                                        case "很快":
-                                            speed = 0.5f;
-                                            break;
-                                        case "较快":
-                                            speed = 0.8f;
-                                            break;
-                                        case "中等":
-                                            speed = 1f;
-                                            break;
-                                        case "较慢":
-                                            speed = 1.5f;
-                                            break;
-                                        case "很慢":
-                                            speed = 2f;
-                                            break;
-                                    }
+                                position = result;
+                                switch (result) {
+                                    case 0:
+                                        speed = 0.5f;
+                                        tvSpeed.setText("很快");
+                                        break;
+                                    case 1:
+                                        speed = 0.8f;
+                                        tvSpeed.setText("较快");
+                                        break;
+                                    case 2:
+                                        speed = 1f;
+                                        tvSpeed.setText("中等");
+                                        break;
+                                    case 3:
+                                        speed = 1.5f;
+                                        tvSpeed.setText("较慢");
+                                        break;
+                                    case 4:
+                                        speed = 2f;
+                                        tvSpeed.setText("很慢");
+                                        break;
                                 }
                             }
                         });
@@ -159,6 +169,9 @@ public class Video2GifActivity extends BaseFunctionActivity implements View.OnCl
                 params.width = (int) (d.getWidth()); //宽度设置全屏宽度
                 setDialog.getWindow().setAttributes(params);
 
+                break;
+            case R.id.iv_back:
+                finish();
                 break;
         }
     }
@@ -201,6 +214,7 @@ public class Video2GifActivity extends BaseFunctionActivity implements View.OnCl
                             Intent intent = new Intent(Video2GifActivity.this, SuccessActivity.class);
                             intent.putExtra("toList", true);
                             intent.putExtra("mVideoPath", outFile);
+                            intent.putExtra("mOutType", outType);
 //                            setResult(RESULT_OK, intent);
                             startActivityForResult(intent, MainActivity.CODE_TO_FUNC);
                         }
@@ -211,10 +225,9 @@ public class Video2GifActivity extends BaseFunctionActivity implements View.OnCl
                 public void onProgress(String message) {
                     if (!TextUtils.isEmpty(message) && message.contains("time=") && message.contains("bitrate")) {
                         String time = message.substring(message.lastIndexOf("time=") + 5, message.lastIndexOf("bitrate"));
-                        float d = (Constant.time2Float(time) * 1000) / mVideoTime;
-                        LogUtils.d(Constant.TAG, "onProgress : " + time);
-                        LogUtils.d(Constant.TAG, "onProgress : " + Constant.time2Float(time));
-                        LogUtils.d(Constant.TAG, "mVideoTime : " + mVideoTime);
+                        float d = (Constant.time2Float(time) * 1000) / mVideoTime / speed;
+                        LogUtils.d(Constant.TAG, "onProgress time : " + time);
+                        LogUtils.d(Constant.TAG, "onProgress : " + d);
                         int progress = Double.valueOf(d * 100).intValue();
                         progressMsg = new Message();
                         progressMsg.arg1 = pMsg;
@@ -244,6 +257,7 @@ public class Video2GifActivity extends BaseFunctionActivity implements View.OnCl
                 @Override
                 public void onStart() {
                     Log.d(Constant.TAG, "execute onStart : ");
+                    LogUtils.d(Constant.TAG, "mVideoTime : " + mVideoTime);
 //                    btnStartTranscode.setEnabled(false);
 //                    progressDialog = new ProgressDialog(AudioTranscodeActivity.this).getProgressDialog();
                     progressDialog.show();

@@ -2,10 +2,15 @@ package com.regan.saata.util;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+
+import androidx.core.content.FileProvider;
 
 import com.regan.saata.Constant;
 import com.regan.saata.bean.MediaInfo;
@@ -17,6 +22,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class FileManager {
     private static FileManager mInstance;
@@ -348,6 +354,73 @@ public class FileManager {
         }
     }
 
+    public static List<MediaInfo> deleteFile(Context mContext, List<MediaInfo> mediaInfoList) {
+        List<MediaInfo> list = new ArrayList<>(mediaInfoList);
+        int size = list.size();
+        try {
+            for (int i = 0; i < size; i++) {
+                MediaInfo info = list.get(i);
+                File file = new File(info.getPath());
+                if (file.delete()) {
+                    mediaInfoList.remove(info);
+                }
+            }
+        } catch (Exception e) {
+            LogUtils.d(Constant.TAG, "deleteFile Exception " + e.getMessage());
+            e.printStackTrace();
+        }
+        return mediaInfoList;
+    }
+
+    /**
+     * @param fileName 文件夹名称
+     * @param type     当前tab 1 video  2 GIF 3 audio
+     */
+    public static boolean deletefile(Context mContext, String fileName, int type) {
+        List<String> typeList = new ArrayList<>();
+        boolean isDel = false;
+        switch (type) {
+            case 1:
+                typeList.add("mp4");
+                typeList.add("avi");
+                typeList.add("wmv");
+                break;
+            case 2:
+                typeList.add("gif");
+                break;
+            case 3:
+                typeList.add("wav");
+                typeList.add("wma");
+                typeList.add("aac");
+                typeList.add("m4a");
+                typeList.add("mp3");
+                typeList.add("flac");
+                break;
+        }
+        try {
+            // 找到文件所在的路径并删除该文件
+            File file = new File(fileName);
+            if (file.exists()) {
+                File[] files = file.listFiles();
+                if (files != null && files.length > 0) {
+                    for (final File f : files) {
+                        String fileType = f.getPath().substring(f.getPath().lastIndexOf(".") + 1);
+                        if (typeList.contains(fileType)) {
+                            if (f.delete()) {
+                                isDel = true;
+                            }
+                        }
+                    }
+                    return isDel;
+                }
+                SharedPrefrencesUtil.saveLongByKey(mContext, "lastModifiedTime", file.lastModified());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isDel;
+    }
+
     /**
      * 读取文件里面的内容
      *
@@ -383,5 +456,41 @@ public class FileManager {
             }
         }
         return null;
+    }
+
+    /*
+     * 使用自定义方法打开文件
+     */
+    public static void openFile(Context context, String mMediaPath, String mType) {
+        Intent intent = new Intent();
+        File cameraPhoto = new File(mMediaPath);
+        String type;
+        if (mType.equals("mp4") || mType.equals("avi") || mType.equals("wmv")) {
+            type = "video/*";
+        } else if (mType.equals("gif")) {
+            type = "image/gif";
+        } else {
+            type = "audio/*";
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            //  此处注意替换包名，
+            Uri contentUri = FileProvider.getUriForFile(
+                    context,
+                    context.getPackageName() + ".fileprovider",
+                    cameraPhoto);
+            LogUtils.d(Constant.TAG, " uri   " + contentUri.getPath());
+            intent.setDataAndType(contentUri, type);
+//            intent.setDataAndType(contentUri, "image/*");
+        } else {
+            intent.setDataAndType(Uri.fromFile(cameraPhoto), type);//也可使用 Uri.parse("file://"+file.getAbsolutePath());
+        }
+
+        //以下设置都不是必须的
+        intent.setAction(Intent.ACTION_VIEW);// 系统根据不同的Data类型，通过已注册的对应Application显示匹配的结果。
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);//系统会检查当前所有已创建的Task中是否有该要启动的Activity的Task
+        //若有，则在该Task上创建Activity；若没有则新建具有该Activity属性的Task，并在该新建的Task上创建Activity。
+        intent.addCategory(Intent.CATEGORY_DEFAULT);//按照普通Activity的执行方式执行
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        context.startActivity(intent);
     }
 }

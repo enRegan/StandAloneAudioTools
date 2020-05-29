@@ -105,7 +105,7 @@
                     android:gravity="center"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:text="转视频"
+                    android:text="视频"
                     android:textColor="@color/list_tab_selected" />
 
                 <View
@@ -131,7 +131,7 @@
                     android:gravity="center"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:text="转gif"
+                    android:text="gif"
                     android:textColor="@color/text_666" />
 
                 <View
@@ -157,7 +157,7 @@
                     android:gravity="center"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:text="转其他"
+                    android:text="音频"
                     android:textColor="@color/text_666" />
 
                 <View

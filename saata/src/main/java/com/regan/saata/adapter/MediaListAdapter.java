@@ -22,6 +22,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.regan.saata.Constant;
 import com.regan.saata.R;
 import com.regan.saata.bean.MediaInfo;
@@ -138,6 +139,8 @@ public class MediaListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     class AudioHolder extends RecyclerView.ViewHolder {
+        RelativeLayout rlTop;
+        ImageView ivCover;
         TextView tvName;
         TextView tvSize;
         TextView tvTime;
@@ -150,6 +153,8 @@ public class MediaListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private AudioHolder(@NonNull View itemView) {
             super(itemView);
             all = itemView;
+            rlTop = itemView.findViewById(R.id.rl_top);
+            ivCover = itemView.findViewById(R.id.iv_cover);
             tvName = itemView.findViewById(R.id.tv_item_name);
             tvSize = itemView.findViewById(R.id.tv_item_size);
             tvTime = itemView.findViewById(R.id.tv_item_time);
@@ -171,19 +176,15 @@ public class MediaListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
 
         private void bind(MediaInfo info, int position) {
-//            if (position == 0) {
-//                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, PxUtils.dp2px(mContext, 100));
-//                params.topMargin = PxUtils.dp2px(mContext, 80);
-//                params.bottomMargin = PxUtils.dp2px(mContext, 20);
-//                all.setLayoutParams(params);
-//            } else {
-//                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, PxUtils.dp2px(mContext, 100));
-//                params.topMargin = PxUtils.dp2px(mContext, 0);
-//                params.bottomMargin = PxUtils.dp2px(mContext, 20);
-//                all.setLayoutParams(params);
-//            }
             this.info = info;
             this.position = position;
+            if (info.type.equals("mp4") || info.type.equals("avi") || info.type.equals("wmv") || info.type.equals("gif")) {
+                Glide.with(mContext).load(info.getPath()).into(ivCover);
+            } else {
+                ivCover.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                rlTop.setBackgroundResource(R.drawable.shape_video_white_bg);
+                Glide.with(mContext).load(R.drawable.list_item_icon).into(ivCover);
+            }
             tvName.setText(info.name);
             tvSize.setText(info.size);
             tvTime.setText(info.time);
@@ -194,6 +195,7 @@ public class MediaListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private void initPopupWindow(View v, final MediaInfo info, final int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.popupwindow_list, null, false);
         int viewHeight = PxUtils.dp2px(mContext, 165);
+        int viewWidth = PxUtils.dp2px(mContext, 120);
         int[] location = new int[2];
         v.getLocationOnScreen(location);
         DisplayMetrics dm = new DisplayMetrics();
@@ -215,11 +217,13 @@ public class MediaListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         final PopupWindow popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         popupWindow.setAnimationStyle(android.R.anim.fade_in);
         popupWindow.setTouchable(true);
+
+        LogUtils.d(Constant.TAG, " popupWindow.getWidth() : " + popupWindow.getWidth());
         popupWindow.setOutsideTouchable(true);
         if (height - location[1] > viewHeight) {
-            popupWindow.showAsDropDown(v, -50, 0);
+            popupWindow.showAsDropDown(v, -(viewWidth / 2 + 30), -30);
         } else {
-            popupWindow.showAsDropDown(v, -50, -(viewHeight + 50));
+            popupWindow.showAsDropDown(v, -(viewWidth / 2 + 30), -(viewHeight + 50));
         }
 //        popupWindow.showAtLocation(v, Gravity.RIGHT|Gravity.TOP, 50, 0);
         llShare.setOnClickListener(new View.OnClickListener() {
@@ -328,6 +332,14 @@ public class MediaListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void openFile(Context context, MediaInfo info) {
         Intent intent = new Intent();
         File cameraPhoto = new File(Constant.getFilePath() + info.getName());
+        String type = "video/*";
+        if (info.type.equals("mp4") || info.type.equals("avi") || info.type.equals("wmv")) {
+            type = "video/*";
+        } else if (info.type.equals("gif")) {
+            type = "image/*";
+        } else {
+            type = "audio/*";
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             //  此处注意替换包名，
             Uri contentUri = FileProvider.getUriForFile(
@@ -335,10 +347,10 @@ public class MediaListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     mContext.getPackageName() + ".fileprovider",
                     cameraPhoto);
             LogUtils.d(Constant.TAG, " uri   " + contentUri.getPath());
-            intent.setDataAndType(contentUri, "audio/*");
+            intent.setDataAndType(contentUri, type);
 //            intent.setDataAndType(contentUri, "image/*");
         } else {
-            intent.setDataAndType(Uri.fromFile(cameraPhoto), "audio/*");//也可使用 Uri.parse("file://"+file.getAbsolutePath());
+            intent.setDataAndType(Uri.fromFile(cameraPhoto), type);//也可使用 Uri.parse("file://"+file.getAbsolutePath());
         }
 
         //以下设置都不是必须的

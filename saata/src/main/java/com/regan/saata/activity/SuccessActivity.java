@@ -1,37 +1,27 @@
 package com.regan.saata.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.Display;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
-import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.bumptech.glide.Glide;
 import com.regan.saata.Constant;
 import com.regan.saata.R;
 import com.regan.saata.bean.MediaInfo;
 import com.regan.saata.util.FileDurationUtil;
+import com.regan.saata.util.FileManager;
 import com.regan.saata.util.LogUtils;
 import com.regan.saata.util.MediaTool;
 import com.regan.saata.util.TimeUtils;
@@ -44,13 +34,14 @@ import java.util.Timer;
 import nl.bravobit.ffmpeg.FFcommandExecuteResponseHandler;
 
 public class SuccessActivity extends BaseFunctionActivity implements View.OnClickListener {
-    private String mVideoPath;
+    private String mVideoPath, mOutType;
     private Button btnGoList;
     private float mVideoTime;
-    private VideoView videoView;
+    //    private VideoView videoView;
     private TextView tvName, tvContent;
     private ImageView ivStart, ivPreview;
     private LinearLayout llGohome, llShare;
+    private RelativeLayout rlVideo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,40 +51,52 @@ public class SuccessActivity extends BaseFunctionActivity implements View.OnClic
         tvTitle = findViewById(R.id.tv_title);
         tvTitle.setText("生成完毕");
         btnGoList = findViewById(R.id.btn_go_list);
-        videoView = findViewById(R.id.vv_video);
+//        videoView = findViewById(R.id.vv_video);
         tvName = findViewById(R.id.tv_name);
         tvContent = findViewById(R.id.tv_content);
         ivPreview = findViewById(R.id.iv_preview);
         ivStart = findViewById(R.id.iv_video_start);
         llGohome = findViewById(R.id.ll_go_home);
         llShare = findViewById(R.id.ll_share);
+        rlVideo = findViewById(R.id.rl_video);
 
         if (getIntent() != null && getIntent().getExtras() != null) {
             mVideoPath = getIntent().getStringExtra("mVideoPath");
             mVideoTime = FileDurationUtil.getDuration(mVideoPath);
+            mOutType = getIntent().getStringExtra("mOutType");
             LogUtils.d(Constant.TAG, " mVideoPath : " + mVideoPath);
-            videoView.setVideoPath(mVideoPath);
-            final Bitmap videoFrame = MediaTool.getVideoFrame(mVideoPath, 1);
-            ivPreview.setImageBitmap(videoFrame);
+//            videoView.setVideoPath(mVideoPath);
+//            final Bitmap videoFrame = MediaTool.getVideoFrame(mVideoPath, 1);
+//            ivPreview.setImageBitmap(videoFrame);
+//            Glide.with(this).load(mVideoPath).into(ivPreview);
+            if (mOutType.equals("mp4") || mOutType.equals("avi") || mOutType.equals("wmv") || mOutType.equals("gif")) {
+                Glide.with(this).load(mVideoPath).into(ivPreview);
+            } else {
+//                videoView.setVisibility(View.GONE);
+//                ivPreview.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//                ivPreview.setImageResource(R.drawable.success_icon);
+                rlVideo.setBackgroundResource(R.drawable.shape_video_white_bg);
+                Glide.with(this).load(R.drawable.success_icon).into(ivPreview);
+            }
             tvName.setText(mVideoPath.substring(mVideoPath.lastIndexOf("/"), mVideoPath.length()));
             tvContent.setText(TimeUtils.secondToTime(FileDurationUtil.getDuration(mVideoPath) / 1000));
             //创建MediaController对象
             MediaController mediaController = new MediaController(this);
             mediaController.setVisibility(View.INVISIBLE);
             //VideoView与MediaController建立关联
-            videoView.setMediaController(mediaController);
+//            videoView.setMediaController(mediaController);
 
             //让VideoView获取焦点
-            videoView.requestFocus();
+//            videoView.requestFocus();
         }
         ivStart.setOnClickListener(this);
-        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                LogUtils.d(Constant.TAG, " mp " + mp.isPlaying());
-                ivStart.setVisibility(View.VISIBLE);
-            }
-        });
+//        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//            @Override
+//            public void onCompletion(MediaPlayer mp) {
+//                LogUtils.d(Constant.TAG, " mp " + mp.isPlaying());
+//                ivStart.setVisibility(View.VISIBLE);
+//            }
+//        });
         btnGoList.setOnClickListener(this);
         llGohome.setOnClickListener(this);
         llShare.setOnClickListener(this);
@@ -109,9 +112,10 @@ public class SuccessActivity extends BaseFunctionActivity implements View.OnClic
                 break;
             case R.id.iv_video_start:
                 LogUtils.d(Constant.TAG, "videoView start");
-                ivPreview.setVisibility(View.GONE);
+//                ivPreview.setVisibility(View.GONE);
                 ivStart.setVisibility(View.GONE);
-                videoView.start();
+                FileManager.openFile(SuccessActivity.this, mVideoPath, mOutType);
+//                videoView.start();
                 break;
             case R.id.ll_go_home:
                 goHome();

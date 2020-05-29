@@ -10,7 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.regan.saata.Constant;
 import com.regan.saata.R;
+import com.regan.saata.util.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +26,7 @@ public class SetDialogItemAdapter extends RecyclerView.Adapter<RecyclerView.View
     private List<SetHolder> viewList;
     private int TYPE_CENTER = 1002;
     private OnItemClickListener mItemClickListener;
+    private int position = 0;
 
     public SetDialogItemAdapter(Context context, List<String> data) {
         this.mContext = context;
@@ -36,8 +39,9 @@ public class SetDialogItemAdapter extends RecyclerView.Adapter<RecyclerView.View
      *
      * @param data
      */
-    public void refresh(List<String> data) {
+    public void refresh(List<String> data, int position) {
         this.mData = data;
+        this.position = position;
         notifyDataSetChanged();
     }
 
@@ -53,13 +57,15 @@ public class SetDialogItemAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        LogUtils.d(Constant.TAG, " SetDialogItemAdapter refresh");
         if (holder instanceof SetHolder) {
             String string = mData.get(position);
             ((SetHolder) holder).bind(string);
             ((SetHolder) holder).ivSet.setTag(position);
             viewList.add((SetHolder) holder);
-            if (position == 2) {
+            if (this.position == position) {
                 ((SetHolder) holder).ivSet.setSelected(true);
+                ((SetHolder) holder).ivSet.callOnClick();
                 ((SetHolder) holder).tvText.setTextColor(mContext.getResources().getColor(R.color.white));
             }
         }

@@ -313,7 +313,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             tvList.setTextColor(getResources().getColor(R.color.home_buttom_text));
             tvMine.setTextColor(getResources().getColor(R.color.white));
             ivHome.setImageResource(R.drawable.home_normal);
-            ivMine.setImageResource(R.drawable.list_normal);
+            ivList.setImageResource(R.drawable.list_normal);
             ivMine.setImageResource(R.drawable.mine_selected);
         } else {
             return;

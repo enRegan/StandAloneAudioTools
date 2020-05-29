@@ -29,16 +29,17 @@
             android:background="@drawable/shape_video_bg"
             app:layout_constraintTop_toBottomOf="@id/title">
 
-            <VideoView
-                android:id="@+id/vv_video"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true" />
+            <!--<VideoView-->
+            <!--android:id="@+id/vv_video"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_centerInParent="true" />-->
 
             <ImageView
                 android:id="@+id/iv_preview"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_centerInParent="true"
                 android:visibility="visible" />
 
             <ImageView
@@ -120,7 +121,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:paddingBottom="5dp"
-                android:background="@drawable/chose_bg">
+                android:background="@drawable/chose_bg2">
 
                 <TextView
                     android:id="@+id/tv_bit"
@@ -154,7 +155,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/speed_icon" />
+                android:src="@drawable/rate_icon" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -189,7 +190,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:paddingBottom="5dp"
-                android:background="@drawable/chose_bg2">
+                android:background="@drawable/chose_bg">
 
                 <TextView
                     android:id="@+id/tv_resolution"

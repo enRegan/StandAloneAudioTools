@@ -50,9 +50,11 @@
 
         <ProgressBar
             android:id="@+id/pb_progress"
-            style="@style/progress_dialog"
+            style="@style/progressbar"
+            android:background="@drawable/shape_progress_bg"
+            android:progressDrawable="@drawable/progress_bar_bg"
             android:layout_marginTop="5dp"
-            android:layout_width="125dp"
+            android:layout_width="match_parent"
             android:layout_height="18dp"
             android:progress="50"
             android:max="100" />

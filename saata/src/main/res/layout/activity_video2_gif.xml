@@ -29,17 +29,27 @@
             android:background="@drawable/shape_video_bg"
             app:layout_constraintTop_toBottomOf="@id/title">
 
-            <VideoView
-                android:id="@+id/vv_video"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true" />
+            <!--<VideoView-->
+            <!--android:id="@+id/vv_video"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_centerInParent="true" />-->
 
-            <ImageView
+            <!--<ImageView-->
+            <!--android:id="@+id/iv_preview"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:visibility="visible" />-->
+            <com.regan.saata.view.NiceImageView
                 android:id="@+id/iv_preview"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:visibility="visible" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                app:corner_radius="2dp"
+                android:layout_centerInParent="true"
+                android:src="@color/white" />
 
             <ImageView
                 android:id="@+id/iv_video_start"
@@ -132,7 +142,7 @@
                     android:textSize="14sp"
                     android:gravity="center"
                     android:textColor="@color/white"
-                    android:text="原始" />
+                    android:text="中等" />
 
                 <ImageView
                     android:layout_width="6dp"

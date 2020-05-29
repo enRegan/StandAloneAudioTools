@@ -2,6 +2,7 @@ package com.regan.saata.view;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -25,7 +26,7 @@ public class MySetDialog extends Dialog {
     private List<String> data;
     private RecyclerView rvSet;
     private Button btnConfirm;
-    private String result;
+    private int result;
     private SetDialogItemAdapter setDialogItemAdapter;
     private TextView tvName;
     private TextView tvContent;
@@ -58,7 +59,7 @@ public class MySetDialog extends Dialog {
         setDialogItemAdapter.setItemClickListener(new SetDialogItemAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                result = data.get(position);
+                result = position;
                 LogUtils.d(Constant.TAG, " position " + position + " result : " + result);
             }
         });
@@ -85,7 +86,7 @@ public class MySetDialog extends Dialog {
      *
      * @param type 1 gif播放速度 2 音频采样率 3 音频比特率 4 视频比特率 5 视频分辨率 6
      */
-    public void setData(int type) {
+    public void setData(int type, final int position) {
         switch (type) {
             case 1:
                 data.add("很快");
@@ -117,27 +118,27 @@ public class MySetDialog extends Dialog {
                 tvContent.setText("Bit rate setting");
                 break;
             case 4:
-                data.add("320k");
-                data.add("256k");
-                data.add("224k");
-                data.add("192k");
-                data.add("160k");
-                data.add("32k");
+                data.add("128K");
+                data.add("512K");
+                data.add("1M");
+                data.add("2M");
+                data.add("3M");
+                data.add("5M");
                 tvName.setText("比特率设置");
                 tvContent.setText("Bit rate setting");
                 break;
             case 5:
-                data.add("320X240");
-                data.add("480X360");
-                data.add("540X480");
-                data.add("960X720");
-                data.add("1600X900");
+                data.add("240p");//320x240
+                data.add("360p");//480X360
+                data.add("480p");//540X480
+                data.add("720p");//960X720
+                data.add("1080p");//1600X900
                 tvName.setText("分辨率设置");
                 tvContent.setText("Resolution setting");
                 break;
         }
-        setDialogItemAdapter.refresh(data);
-        result = data.get(2);
+        setDialogItemAdapter.refresh(data, position);
+//        result = position;
     }
 
 //    public MySetDialog getLodingDialog(Context mContext,int type) {//type: 1速率
@@ -182,7 +183,7 @@ public class MySetDialog extends Dialog {
 //    }
 
     public interface DialogListener {
-        public void getResult(String result);
+        public void getResult(int result);
     }
 
     public void setDialogListener(DialogListener listener) {

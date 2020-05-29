@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -38,6 +41,7 @@ import com.regan.saata.view.MyDelDialog;
 import com.regan.saata.view.MyLoadingDialog;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -70,6 +74,11 @@ public class ListFragment extends Fragment {
     private MediaListAdapter gifListAdapter;
     private MediaListAdapter audioListAdapter;
     private boolean stilGetInfo = true;
+    private boolean refreshing = true;
+    private int type;//当前tab 1 video  2 GIF 3 audio
+    private List<MediaInfo> videoList;
+    private List<MediaInfo> gifList;
+    private List<MediaInfo> audioList;
 
     @Nullable
     @Override
@@ -100,6 +109,7 @@ public class ListFragment extends Fragment {
                 vVideo.setBackgroundColor(getActivity().getResources().getColor(R.color.list_tab_selected));
                 rvAudio.setVisibility(View.GONE);
                 rvGif.setVisibility(View.GONE);
+                type = 1;
 //                LogUtils.d(Constant.TAG, "llVideo");
                 if (videoListAdapter.getItemCount() == 0) {
                     rvVideo.setVisibility(View.GONE);
@@ -121,7 +131,8 @@ public class ListFragment extends Fragment {
                 vVideo.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
                 rvAudio.setVisibility(View.GONE);
                 rvVideo.setVisibility(View.GONE);
-//                LogUtils.d(Constant.TAG, "llGif");
+                type = 2;
+                LogUtils.d(Constant.TAG, "llGif type " + type);
                 if (gifListAdapter.getItemCount() == 0) {
                     rvGif.setVisibility(View.GONE);
                     llEmpty.setVisibility(View.VISIBLE);
@@ -142,6 +153,7 @@ public class ListFragment extends Fragment {
                 vVideo.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
                 rvGif.setVisibility(View.GONE);
                 rvVideo.setVisibility(View.GONE);
+                type = 3;
 //                LogUtils.d(Constant.TAG, "llAudio");
                 if (audioListAdapter.getItemCount() == 0) {
                     rvAudio.setVisibility(View.GONE);
@@ -167,9 +179,40 @@ public class ListFragment extends Fragment {
                 ivConfirm.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        FileManager.deletefile(Constant.getFilePath());
+                        List<MediaInfo> delList = new ArrayList<>();
+                        List<MediaInfo> newList = new ArrayList<>();
+                        MediaListAdapter delAdapter;
+                        if (type == 1) {
+                            delList = videoList;
+                            delAdapter = videoListAdapter;
+                        } else if (type == 2) {
+                            delList = gifList;
+                            delAdapter = gifListAdapter;
+                        } else {
+                            delList = audioList;
+                            delAdapter = audioListAdapter;
+                        }
+                        int delListSize = delList.size();
+                        newList = FileManager.deleteFile(mActivity, delList);
+                        if (newList.size() != delListSize) {
+                            if (type == 1) {
+                                videoList = newList;
+                                videolListDataSave.setDataList(Constant.VIDEO, videoList);
+                            } else if (type == 2) {
+                                gifList = newList;
+                                giflListDataSave.setDataList(Constant.GIF, gifList);
+                            } else {
+                                audioList = newList;
+                                audioListDataSave.setDataList(Constant.AUDIO, audioList);
+                            }
+                            Toast.makeText(mActivity, "删除成功", Toast.LENGTH_SHORT).show();
+                            SharedPrefrencesUtil.saveLongByKey(mActivity, "lastModifiedTime", new File(Constant.getFilePath()).lastModified());
+                            delAdapter.refresh(newList);
+//                            delAdapter.notifyDataSetChanged();
+//                            onResume();
+                        }
+//                        FileManager.deletefile(mActivity, Constant.getFilePath(), type);
                         myDelDialog.dismiss();
-                        onResume();
                     }
                 });
                 myDelDialog.show();
@@ -203,6 +246,7 @@ public class ListFragment extends Fragment {
                     @Override
                     public void run() {
                         dialog.show();
+                        refreshing = true;
                     }
                 });
                 File file = new File(Constant.getFilePath());
@@ -213,9 +257,9 @@ public class ListFragment extends Fragment {
                 List<MediaInfo> oldVideoData = videolListDataSave.getDataList(Constant.VIDEO, MediaInfo.class);
                 List<MediaInfo> oldGifData = giflListDataSave.getDataList(Constant.GIF, MediaInfo.class);
                 List<MediaInfo> oldAudioData = audioListDataSave.getDataList(Constant.AUDIO, MediaInfo.class);
-                final List<MediaInfo> videoList = new ArrayList<>();
-                final List<MediaInfo> gifList = new ArrayList<>();
-                final List<MediaInfo> audioList = new ArrayList<>();
+                videoList = new ArrayList<>();
+                gifList = new ArrayList<>();
+                audioList = new ArrayList<>();
                 videoListAdapter = new MediaListAdapter(mActivity, videoList);
                 gifListAdapter = new MediaListAdapter(mActivity, gifList);
                 audioListAdapter = new MediaListAdapter(mActivity, audioList);
@@ -238,6 +282,7 @@ public class ListFragment extends Fragment {
                     @Override
                     public void run() {
                         dialog.dismiss();
+                        refreshing = false;
                     }
                 });
                 lastModifiedTime = file.lastModified();
@@ -278,20 +323,20 @@ public class ListFragment extends Fragment {
 //                                f.delete();
                         continue;
                     }
-                    if (getFileType(f.getPath()).equals("mp4")
-                            || getFileType(f.getPath()).equals("wmv")
-                            || getFileType(f.getPath()).equals("avi")) {
-                        try {
-                            int duration = FileDurationUtil.getDuration(f.getPath()) / 1000;
-                            if (TimeUtils.secondToTime(duration).contains("00:00:00")) {
-//                                    f.delete();
-                                continue;
-                            }
-                        } catch (Exception e) {
-//                                f.delete();
-                            continue;
-                        }
-                    }
+//                    if (getFileType(f.getPath()).equals("mp4")
+//                            || getFileType(f.getPath()).equals("wmv")
+//                            || getFileType(f.getPath()).equals("avi")) {
+//                        try {
+//                            int duration = FileDurationUtil.getDuration(f.getPath()) / 1000;
+//                            if (TimeUtils.secondToTime(duration).contains("00:00:00")) {
+////                                    f.delete();
+//                                continue;
+//                            }
+//                        } catch (Exception e) {
+////                                f.delete();
+//                            continue;
+//                        }
+//                    }
                     if (oldMediaInfoList != null && oldMediaInfoList.size() != 0) {
 //                                LogUtils.d(Constant.TAG, "oldData");
                         boolean isContains = false;
@@ -504,43 +549,40 @@ public class ListFragment extends Fragment {
         return fragment;
     }
 
+    private Handler mHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switchTab(msg.what);
+            return true;
+        }
+    });
+
     public void switchTab(int position) {
+        if (refreshing) {
+            mHandler.sendEmptyMessageDelayed(position, 100);
+            return;
+        }
         LogUtils.d(Constant.TAG, " switchTab position : " + position);
         switch (position) {
             case 3:
-                if (videoListAdapter == null || videoListAdapter.getItemCount() == 0) {
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            llVideo.performClick();
-                        }
-                    }, 500);
+                if (llVideo == null) {
+                    mHandler.sendEmptyMessageDelayed(position, 100);
                 } else {
-                    llVideo.performClick();
+                    llVideo.callOnClick();
                 }
                 break;
             case 2:
-                if (gifListAdapter == null || gifListAdapter.getItemCount() == 0) {
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            llGif.performClick();
-                        }
-                    }, 500);
+                if (llVideo == null) {
+                    mHandler.sendEmptyMessageDelayed(position, 100);
                 } else {
-                    llGif.performClick();
+                    llGif.callOnClick();
                 }
                 break;
             case 1:
-                if (audioListAdapter == null || audioListAdapter.getItemCount() == 0) {
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            llAudio.performClick();
-                        }
-                    }, 500);
+                if (llVideo == null) {
+                    mHandler.sendEmptyMessageDelayed(position, 100);
                 } else {
-                    llAudio.performClick();
+                    llAudio.callOnClick();
                 }
                 break;
         }

@@ -111,6 +111,10 @@
         <item name="android:indeterminateDrawable">
             @android:drawable/progress_indeterminate_horizontal
         </item>
+        <!--<item name="android:progressDrawable">@drawable/progress_bar_bg</item>-->
+    </style>
+
+    <style name="progressbar" parent="Widget.AppCompat.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress_bar_bg</item>
     </style>
 

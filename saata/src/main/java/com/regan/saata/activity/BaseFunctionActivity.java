@@ -92,7 +92,7 @@ public abstract class BaseFunctionActivity extends BaseActivity {
      * 任务超时结束调用
      */
     protected void stopFFmpeg() {
-        Toast.makeText(this, "生成失败，请稍后或改变参数再试", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "转换失败，请更换其他参数重试。", Toast.LENGTH_SHORT).show();
     }
 
     public class MTimerTask extends TimerTask {

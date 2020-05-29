@@ -176,7 +176,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         List<BaseItemInfo> list1 = new ArrayList<>();
         BaseItemInfo gif = new BaseItemInfo();
         gif.name = "视频转GIF";
-        gif.iconSrc = R.drawable.gif;
+        gif.iconSrc = R.drawable.gif_gif;
         list1.add(gif);
         HomeItemAdapter gifItemAdapter = new HomeItemAdapter(mActivity, list1);
         gifItemAdapter.setItemClickListener(new HomeItemAdapter.OnItemClickListener() {
@@ -407,7 +407,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 //            startActivityForResult(extract, MainActivity.CODE_TO_FUNC);
             switch (mediaType) {
                 case 1:
-                    mOutPath = Constant.getFilePath() + "视频转格式_" + System.currentTimeMillis();
+                    mOutPath = Constant.getFilePath() + "音频提取_" + System.currentTimeMillis();
                     Intent extract = new Intent(mActivity, VideoExtractActivity.class);
                     extract.putExtra("mVideoPath", mVideoPath);
                     extract.putExtra("mOutPath", mOutPath);
@@ -422,7 +422,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     startActivityForResult(gif, MainActivity.CODE_TO_FUNC);
                     break;
                 case 3:
-                    mOutPath = Constant.getFilePath() + "音频提取_" + System.currentTimeMillis();
+                    mOutPath = Constant.getFilePath() + "视频转格式_" + System.currentTimeMillis();
                     Intent video = new Intent(mActivity, VideoTranscodeActivity.class);
                     video.putExtra("mVideoPath", mVideoPath);
                     video.putExtra("mOutPath", mOutPath);

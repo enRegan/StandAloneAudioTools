@@ -3,6 +3,7 @@ package com.regan.saata.fragment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -26,6 +27,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.regan.saata.BuildConfig;
 import com.regan.saata.Constant;
 import com.regan.saata.R;
 import com.regan.saata.activity.WebViewActivity;
@@ -86,7 +88,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         safe.iconSrc = R.drawable.mine_safe;
         list.add(safe);
         BaseItemInfo star = new BaseItemInfo();
-        star.name = "评论";
+        star.name = "给个好评";
         star.iconSrc = R.drawable.mine_star;
         list.add(star);
         BaseItemInfo version = new BaseItemInfo();
@@ -125,7 +127,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 //                        }
                         try {
                             Intent i = new Intent(Intent.ACTION_VIEW);
-                            i.setData(Uri.parse("market://search?q=" + getActivity().getPackageName()));
+                            i.setData(Uri.parse("market://details?id=" + "com.tencent.mm"));
                             startActivity(i);
                         } catch (Exception e) {
                             Toast.makeText(getActivity(), "您的手机没有安装Android应用市场", Toast.LENGTH_SHORT).show();
@@ -193,8 +195,22 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.iv_icon:
-                break;
+        }
+    }
+
+    void goRate() {
+        String market = "market://details?id=" + BuildConfig.APPLICATION_ID;
+        Uri uri = Uri.parse(market);
+        Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+        goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
+                Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
+                Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+        try {
+            startActivity(goToMarket);
+        } catch (ActivityNotFoundException e) {
+            String url = "http://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID;
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse(url)));
         }
     }
 

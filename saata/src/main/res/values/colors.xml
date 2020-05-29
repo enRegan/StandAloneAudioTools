@@ -11,6 +11,7 @@
     <color name="title">#F2F2F2</color>
     <color name="black">#000000</color>
     <color name="black30">#4D000000</color>
+    <color name="black10">#11000000</color>
     <color name="black50">#7D000000</color>
     <color name="white">#FFFFFF</color>
     <color name="whiteAlpha30">#4DFFFFFF</color>
@@ -52,4 +53,5 @@
     <color name="line_d6b1">#D6DBE1</color>
     <color name="list_tab_selected">#009BFF</color>
     <color name="text_b4b">#B4BCCA</color>
+    <color name="progressbar_bg">#e4e8f3</color>
 </resources>
