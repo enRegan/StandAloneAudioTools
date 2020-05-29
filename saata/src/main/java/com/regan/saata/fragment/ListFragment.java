@@ -7,22 +7,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -30,18 +25,15 @@ import com.regan.saata.Constant;
 import com.regan.saata.R;
 import com.regan.saata.adapter.MediaListAdapter;
 import com.regan.saata.bean.MediaInfo;
-import com.regan.saata.util.FileDurationUtil;
 import com.regan.saata.util.FileManager;
 import com.regan.saata.util.FileSizeUtil;
 import com.regan.saata.util.ListDataSave;
 import com.regan.saata.util.LogUtils;
 import com.regan.saata.util.SharedPrefrencesUtil;
-import com.regan.saata.util.TimeUtils;
 import com.regan.saata.view.MyDelDialog;
 import com.regan.saata.view.MyLoadingDialog;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -75,7 +67,8 @@ public class ListFragment extends Fragment {
     private MediaListAdapter audioListAdapter;
     private boolean stilGetInfo = true;
     private boolean refreshing = true;
-    private int type;//当前tab 1 video  2 GIF 3 audio
+    private boolean fromSuccess = true;
+    private int currentTab = 1;//当前tab 1 video  2 GIF 3 audio
     private List<MediaInfo> videoList;
     private List<MediaInfo> gifList;
     private List<MediaInfo> audioList;
@@ -109,7 +102,7 @@ public class ListFragment extends Fragment {
                 vVideo.setBackgroundColor(getActivity().getResources().getColor(R.color.list_tab_selected));
                 rvAudio.setVisibility(View.GONE);
                 rvGif.setVisibility(View.GONE);
-                type = 1;
+                currentTab = 1;
 //                LogUtils.d(Constant.TAG, "llVideo");
                 if (videoListAdapter.getItemCount() == 0) {
                     rvVideo.setVisibility(View.GONE);
@@ -131,8 +124,8 @@ public class ListFragment extends Fragment {
                 vVideo.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
                 rvAudio.setVisibility(View.GONE);
                 rvVideo.setVisibility(View.GONE);
-                type = 2;
-                LogUtils.d(Constant.TAG, "llGif type " + type);
+                currentTab = 2;
+                LogUtils.d(Constant.TAG, "llGif currentTab " + currentTab);
                 if (gifListAdapter.getItemCount() == 0) {
                     rvGif.setVisibility(View.GONE);
                     llEmpty.setVisibility(View.VISIBLE);
@@ -153,7 +146,7 @@ public class ListFragment extends Fragment {
                 vVideo.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
                 rvGif.setVisibility(View.GONE);
                 rvVideo.setVisibility(View.GONE);
-                type = 3;
+                currentTab = 3;
 //                LogUtils.d(Constant.TAG, "llAudio");
                 if (audioListAdapter.getItemCount() == 0) {
                     rvAudio.setVisibility(View.GONE);
@@ -182,10 +175,10 @@ public class ListFragment extends Fragment {
                         List<MediaInfo> delList = new ArrayList<>();
                         List<MediaInfo> newList = new ArrayList<>();
                         MediaListAdapter delAdapter;
-                        if (type == 1) {
+                        if (currentTab == 1) {
                             delList = videoList;
                             delAdapter = videoListAdapter;
-                        } else if (type == 2) {
+                        } else if (currentTab == 2) {
                             delList = gifList;
                             delAdapter = gifListAdapter;
                         } else {
@@ -195,15 +188,21 @@ public class ListFragment extends Fragment {
                         int delListSize = delList.size();
                         newList = FileManager.deleteFile(mActivity, delList);
                         if (newList.size() != delListSize) {
-                            if (type == 1) {
+                            if (currentTab == 1) {
                                 videoList = newList;
-                                videolListDataSave.setDataList(Constant.VIDEO, videoList);
-                            } else if (type == 2) {
+//                                videolListDataSave.setDataList(Constant.VIDEO, videoList);
+                                videolListDataSave.clearDataList();
+                                llEmpty.setVisibility(View.VISIBLE);
+                            } else if (currentTab == 2) {
                                 gifList = newList;
-                                giflListDataSave.setDataList(Constant.GIF, gifList);
+//                                giflListDataSave.setDataList(Constant.GIF, gifList);
+                                giflListDataSave.clearDataList();
+                                llEmpty.setVisibility(View.VISIBLE);
                             } else {
                                 audioList = newList;
-                                audioListDataSave.setDataList(Constant.AUDIO, audioList);
+//                                audioListDataSave.setDataList(Constant.AUDIO, audioList);
+                                audioListDataSave.clearDataList();
+                                llEmpty.setVisibility(View.VISIBLE);
                             }
                             Toast.makeText(mActivity, "删除成功", Toast.LENGTH_SHORT).show();
                             SharedPrefrencesUtil.saveLongByKey(mActivity, "lastModifiedTime", new File(Constant.getFilePath()).lastModified());
@@ -211,7 +210,7 @@ public class ListFragment extends Fragment {
 //                            delAdapter.notifyDataSetChanged();
 //                            onResume();
                         }
-//                        FileManager.deletefile(mActivity, Constant.getFilePath(), type);
+//                        FileManager.deletefile(mActivity, Constant.getFilePath(), currentTab);
                         myDelDialog.dismiss();
                     }
                 });
@@ -274,9 +273,9 @@ public class ListFragment extends Fragment {
                         rvAudio.setAdapter(audioListAdapter);
                     }
                 });
-                refreshMediaList(file, files, oldVideoData, videoList, videoListAdapter, Constant.VIDEO, videolListDataSave);
-                refreshMediaList(file, files, oldGifData, gifList, gifListAdapter, Constant.GIF, giflListDataSave);
-                refreshMediaList(file, files, oldAudioData, audioList, audioListAdapter, Constant.AUDIO, audioListDataSave);
+                refreshMediaList(file, files, oldVideoData, videoList, videoListAdapter, Constant.VIDEO, videolListDataSave, 1);
+                refreshMediaList(file, files, oldGifData, gifList, gifListAdapter, Constant.GIF, giflListDataSave, 2);
+                refreshMediaList(file, files, oldAudioData, audioList, audioListAdapter, Constant.AUDIO, audioListDataSave, 3);
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
@@ -291,30 +290,12 @@ public class ListFragment extends Fragment {
         }).start();
     }
 
-    private void refreshMediaList(File file, File[] files, List<MediaInfo> oldMediaInfoList, final List<MediaInfo> mediaInfoList, final MediaListAdapter mediaListAdapter, final String type, final ListDataSave listDataSave) {
+    private void refreshMediaList(File file, File[] files, List<MediaInfo> oldMediaInfoList, final List<MediaInfo> mediaInfoList, final MediaListAdapter mediaListAdapter, final String type, final ListDataSave listDataSave, int tab) {
         if (lastModifiedTime == file.lastModified()) {
             mediaInfoList.addAll(oldMediaInfoList);
-//            for (MediaInfo info : oldData) {
-//                LogUtils.d(Constant.TAG, " old type : " + info.getType());
-//                if(info.getType().equals("mp4")
-//                        || info.getType().equals("wmv")
-//                        || info.getType().equals("avi")){
-//                    videoList.add(info);
-//                }else if(info.getType().equals("gif")){
-//                    gifList.add(info);
-//                }else{
-//                    audioList.add(info);
-//                }
-//            }
             oldMediaInfoList.clear();
         } else {
             stilGetInfo = true;
-//                    String[] a = file.list();
-//                    if(a != null && a.length > 0){
-//                        for (String s:a) {
-//                            LogUtils.d(Constant.TAG, s);
-//                        }
-//                    }
             if (files != null && files.length > 0) {
                 for (final File f : files) {
 //                    LogUtils.d(Constant.TAG, " name: " + f.getName());
@@ -353,7 +334,7 @@ public class ListFragment extends Fragment {
                             continue;
                         }
                     }
-//                    LogUtils.d(Constant.TAG, " type: " + f.getPath().substring(f.getPath().lastIndexOf(".") + 1));
+//                    LogUtils.d(Constant.TAG, " currentTab: " + f.getPath().substring(f.getPath().lastIndexOf(".") + 1));
                     final MediaInfo info = new MediaInfo();
 //                            LogUtils.d(Constant.TAG, "yeah " + info.getName());
                     info.setPath(f.getPath());
@@ -364,7 +345,7 @@ public class ListFragment extends Fragment {
                     info.params = "参数:";
                     info.type = getFileType(f.getPath());
                     info.lastModified = f.lastModified();
-//                    LogUtils.d(Constant.TAG, " type :" + info.type);
+//                    LogUtils.d(Constant.TAG, " currentTab :" + info.currentTab);
                     ArrayList<String> cmdd = new ArrayList<>();
                     cmdd.add("-i");
                     cmdd.add(f.getPath());
@@ -400,12 +381,12 @@ public class ListFragment extends Fragment {
                             mediaInfoList.add(info);
                         }
                     }
-//                    if(info.type.equals("mp4")
-//                            || info.type.equals("wmv")
-//                            || info.type.equals("avi")){
+//                    if(info.currentTab.equals("mp4")
+//                            || info.currentTab.equals("wmv")
+//                            || info.currentTab.equals("avi")){
 //                        getFileInfo(cmd, info, videoListAdapter, videoList);
 //                        videoList.add(info);
-//                    }else if(info.type.equals("gif")){
+//                    }else if(info.currentTab.equals("gif")){
 //                        getFileInfo(cmd, info, gifListAdapter, gifList);
 //                        gifList.add(info);
 //                    }else{
@@ -424,13 +405,16 @@ public class ListFragment extends Fragment {
                 });
             }
         }
-        if (mediaListAdapter.getItemCount() != 0) {
-            mActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    llEmpty.setVisibility(View.GONE);
-                }
-            });
+        if (currentTab == tab) {
+            if (mediaInfoList.size() != 0) {
+                LogUtils.d(Constant.TAG, "tab : " + tab + "   mediaInfoList.size : " + mediaInfoList.size());
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        llEmpty.setVisibility(View.GONE);
+                    }
+                });
+            }
         }
     }
 
@@ -558,31 +542,41 @@ public class ListFragment extends Fragment {
     });
 
     public void switchTab(int position) {
-        if (refreshing) {
-            mHandler.sendEmptyMessageDelayed(position, 100);
+        LogUtils.d(Constant.TAG, " switchTab position : " + position + " fromSuccess " + fromSuccess);
+        if (fromSuccess) {
+            mHandler.sendEmptyMessageDelayed(position, 200);
+            fromSuccess = false;
             return;
         }
+        if (refreshing) {
+            mHandler.sendEmptyMessageDelayed(position, 200);
+            return;
+        }
+
         LogUtils.d(Constant.TAG, " switchTab position : " + position);
         switch (position) {
             case 3:
                 if (llVideo == null) {
-                    mHandler.sendEmptyMessageDelayed(position, 100);
+                    mHandler.sendEmptyMessageDelayed(position, 200);
                 } else {
                     llVideo.callOnClick();
+                    fromSuccess = true;
                 }
                 break;
             case 2:
                 if (llVideo == null) {
-                    mHandler.sendEmptyMessageDelayed(position, 100);
+                    mHandler.sendEmptyMessageDelayed(position, 200);
                 } else {
                     llGif.callOnClick();
+                    fromSuccess = true;
                 }
                 break;
             case 1:
                 if (llVideo == null) {
-                    mHandler.sendEmptyMessageDelayed(position, 100);
+                    mHandler.sendEmptyMessageDelayed(position, 200);
                 } else {
                     llAudio.callOnClick();
+                    fromSuccess = true;
                 }
                 break;
         }

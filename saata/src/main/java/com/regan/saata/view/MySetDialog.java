@@ -26,7 +26,7 @@ public class MySetDialog extends Dialog {
     private List<String> data;
     private RecyclerView rvSet;
     private Button btnConfirm;
-    private int result;
+    private int result = -1;
     private SetDialogItemAdapter setDialogItemAdapter;
     private TextView tvName;
     private TextView tvContent;
@@ -141,46 +141,6 @@ public class MySetDialog extends Dialog {
 //        result = position;
     }
 
-//    public MySetDialog getLodingDialog(Context mContext,int type) {//type: 1速率
-////        setDialog = new MySetDialog(mContext, R.style.my_set_dialog);
-//        setDialog.setContentView(R.layout.dialog_set);
-//
-//        ivClose = setDialog.findViewById(R.id.iv_close);
-//        rvSet = setDialog.findViewById(R.id.rv_set);
-//        btnConfirm = setDialog.findViewById(R.id.btn_confirm);
-//
-//        data = new ArrayList<>();
-//        if(type == 1){
-//            data.add("很快");
-//            data.add("较快");
-//            data.add("中等");
-//            data.add("较慢");
-//            data.add("很慢");
-//        }
-//        SetDialogItemAdapter setDialogItemAdapter = new SetDialogItemAdapter(mContext, data);
-//        setDialogItemAdapter.setItemClickListener(new SetDialogItemAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(int position) {
-//                result = data.get(position);
-//            }
-//        });
-//        ivClose.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                setDialog.dismiss();
-//            }
-//        });
-//        btnConfirm.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                dialogListener.getResult(result);
-//            }
-//        });
-//
-//        rvSet.setAdapter(setDialogItemAdapter);
-//        rvSet.setLayoutManager(new GridLayoutManager(mContext, 3));
-//        return setDialog;
-//    }
 
     public interface DialogListener {
         public void getResult(int result);

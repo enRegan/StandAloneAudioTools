@@ -11,27 +11,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.regan.saata.Constant;
 import com.regan.saata.R;
-import com.regan.saata.bean.MediaInfo;
 import com.regan.saata.util.FileDurationUtil;
 import com.regan.saata.util.FileManager;
 import com.regan.saata.util.LogUtils;
-import com.regan.saata.util.MediaTool;
 import com.regan.saata.util.TimeUtils;
-import com.regan.saata.view.MySetDialog;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Timer;
-
-import nl.bravobit.ffmpeg.FFcommandExecuteResponseHandler;
 
 public class SuccessActivity extends BaseFunctionActivity implements View.OnClickListener {
     private String mVideoPath, mOutType;
@@ -65,38 +56,20 @@ public class SuccessActivity extends BaseFunctionActivity implements View.OnClic
             mVideoTime = FileDurationUtil.getDuration(mVideoPath);
             mOutType = getIntent().getStringExtra("mOutType");
             LogUtils.d(Constant.TAG, " mVideoPath : " + mVideoPath);
-//            videoView.setVideoPath(mVideoPath);
-//            final Bitmap videoFrame = MediaTool.getVideoFrame(mVideoPath, 1);
-//            ivPreview.setImageBitmap(videoFrame);
-//            Glide.with(this).load(mVideoPath).into(ivPreview);
             if (mOutType.equals("mp4") || mOutType.equals("avi") || mOutType.equals("wmv") || mOutType.equals("gif")) {
                 Glide.with(this).load(mVideoPath).into(ivPreview);
             } else {
-//                videoView.setVisibility(View.GONE);
-//                ivPreview.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//                ivPreview.setImageResource(R.drawable.success_icon);
-                rlVideo.setBackgroundResource(R.drawable.shape_video_white_bg);
+                rlVideo.setBackgroundResource(R.color.transparent);
+                ivPreview.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 Glide.with(this).load(R.drawable.success_icon).into(ivPreview);
             }
-            tvName.setText(mVideoPath.substring(mVideoPath.lastIndexOf("/"), mVideoPath.length()));
+            if (mOutType.equals("gif")) {
+                ivStart.setVisibility(View.GONE);
+            }
+            tvName.setText(mVideoPath.substring(mVideoPath.lastIndexOf("/") + 1));
             tvContent.setText(TimeUtils.secondToTime(FileDurationUtil.getDuration(mVideoPath) / 1000));
-            //创建MediaController对象
-            MediaController mediaController = new MediaController(this);
-            mediaController.setVisibility(View.INVISIBLE);
-            //VideoView与MediaController建立关联
-//            videoView.setMediaController(mediaController);
-
-            //让VideoView获取焦点
-//            videoView.requestFocus();
         }
         ivStart.setOnClickListener(this);
-//        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//            @Override
-//            public void onCompletion(MediaPlayer mp) {
-//                LogUtils.d(Constant.TAG, " mp " + mp.isPlaying());
-//                ivStart.setVisibility(View.VISIBLE);
-//            }
-//        });
         btnGoList.setOnClickListener(this);
         llGohome.setOnClickListener(this);
         llShare.setOnClickListener(this);
@@ -113,7 +86,7 @@ public class SuccessActivity extends BaseFunctionActivity implements View.OnClic
             case R.id.iv_video_start:
                 LogUtils.d(Constant.TAG, "videoView start");
 //                ivPreview.setVisibility(View.GONE);
-                ivStart.setVisibility(View.GONE);
+//                ivStart.setVisibility(View.GONE);
                 FileManager.openFile(SuccessActivity.this, mVideoPath, mOutType);
 //                videoView.start();
                 break;

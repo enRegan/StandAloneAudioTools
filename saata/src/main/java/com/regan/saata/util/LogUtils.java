@@ -42,7 +42,7 @@ public class LogUtils {
 
     private static Handler handler = null;
     public static final int maxBackupIndex = 5;
-    private static String logFilePath = "/mnt/sdcard/audiotools/log";
+    private static String logFilePath = "/mnt/sdcard/视频转音频文件夹/log";
 
     static {
         HandlerThread thread = new HandlerThread("HandlerThread");

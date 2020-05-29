@@ -84,7 +84,7 @@ public class MediaListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder.itemView.setTag(position);
         }
 //        if(holder instanceof HeaderHolder){
-//            ((HeaderHolder)holder).bind("内部存储目录/audiotools/music");
+//            ((HeaderHolder)holder).bind("内部存储目录/视频转音频文件夹/transcode");
 //            holder.itemView.setTag(position);
 //        }
         if (holder instanceof EmptyHolder) {
@@ -236,7 +236,7 @@ public class MediaListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         llSrc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "内部存储目录/audiotools/music/" + info.getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "内部存储目录/视频转音频文件夹/transcode/" + info.getName(), Toast.LENGTH_SHORT).show();
 //                openFile(mContext, info);
                 popupWindow.dismiss();
             }

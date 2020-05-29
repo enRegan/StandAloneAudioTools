@@ -55,8 +55,8 @@ public class VideoTranscodeActivity extends BaseFunctionActivity implements View
     private TextView tvResolution;
     private String bit;
     private String resolution;
-    private int bitPosition = 0;
-    private int resolutionPosition = 0;
+    private int bitPosition = -1;
+    private int resolutionPosition = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,29 +83,11 @@ public class VideoTranscodeActivity extends BaseFunctionActivity implements View
             tvTitle.setText("视频转" + mOutType);
             mVideoTime = FileDurationUtil.getDuration(mVideoPath);
             LogUtils.d(Constant.TAG, " mVideoPath : " + mVideoPath + " mOutPath : " + mOutPath);
-//            videoView.setVideoPath(mVideoPath);
-//            final Bitmap videoFrame = MediaTool.getVideoFrame(mVideoPath, 1);
-//            ivPreview.setImageBitmap(videoFrame);
             Glide.with(this).load(mVideoPath).into(ivPreview);
-            tvName.setText(mVideoPath.substring(mVideoPath.lastIndexOf("/"), mVideoPath.length()));
+            tvName.setText(mVideoPath.substring(mVideoPath.lastIndexOf("/") + 1));
             tvContent.setText(TimeUtils.secondToTime(FileDurationUtil.getDuration(mVideoPath) / 1000));
-            //创建MediaController对象
-            MediaController mediaController = new MediaController(this);
-            mediaController.setVisibility(View.INVISIBLE);
-            //VideoView与MediaController建立关联
-//            videoView.setMediaController(mediaController);
-
-            //让VideoView获取焦点
-//            videoView.requestFocus();
         }
         ivStart.setOnClickListener(this);
-//        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//            @Override
-//            public void onCompletion(MediaPlayer mp) {
-//                LogUtils.d(Constant.TAG, " mp " + mp.isPlaying());
-//                ivStart.setVisibility(View.VISIBLE);
-//            }
-//        });
         bit = "";
         resolution = "";
         btnStartTranscode.setOnClickListener(this);
@@ -124,7 +106,7 @@ public class VideoTranscodeActivity extends BaseFunctionActivity implements View
             case R.id.iv_video_start:
                 LogUtils.d(Constant.TAG, "videoView start");
 //                ivPreview.setVisibility(View.GONE);
-                ivStart.setVisibility(View.GONE);
+//                ivStart.setVisibility(View.GONE);
                 FileManager.openFile(VideoTranscodeActivity.this, mVideoPath, "mp4");
 //                videoView.start();
                 break;

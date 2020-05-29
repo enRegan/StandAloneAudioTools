@@ -75,7 +75,7 @@ public class Constant {
 
     public static String getFilePath() {
         String path = null;
-        File folder = new File(Environment.getExternalStorageDirectory().getPath() + "/videotools/transcode/");
+        File folder = new File(Environment.getExternalStorageDirectory().getPath() + "/视频转音频文件夹/transcode/");
         if (!folder.exists()) {
             boolean mkdirs = folder.mkdirs();
         }

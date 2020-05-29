@@ -61,12 +61,11 @@
         android:scaleType="center" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_toLeftOf="@id/iv_more"
         android:layout_below="@id/rl_top"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="14dp"
         android:gravity="center_vertical"
         android:orientation="vertical">
 

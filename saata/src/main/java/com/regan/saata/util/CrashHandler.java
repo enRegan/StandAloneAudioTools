@@ -20,7 +20,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     private static CrashHandler instance = new CrashHandler();
     private Context mContext;
     private Thread.UncaughtExceptionHandler mDefaultHandler = null;
-    public static final String CRASH_DIR = Environment.getExternalStorageDirectory().getPath() + "/audiotools/crash/";
+    public static final String CRASH_DIR = Environment.getExternalStorageDirectory().getPath() + "/视频转音频文件夹/crash/";
 
     private CrashHandler() {
     }

@@ -39,6 +39,11 @@ public class ListDataSave {
 
     }
 
+    public void clearDataList() {
+        editor.clear();
+        editor.commit();
+    }
+
     /**
      * 获取List
      *

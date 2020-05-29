@@ -54,8 +54,8 @@ public class VideoExtractActivity extends BaseFunctionActivity implements View.O
     private TextView tvBit;
     private String rate;
     private String bit;
-    private int ratePosition = 0;
-    private int bitPosition = 0;
+    private int ratePosition = -1;
+    private int bitPosition = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,29 +82,11 @@ public class VideoExtractActivity extends BaseFunctionActivity implements View.O
             tvTitle.setText("视频转" + mOutType);
             mVideoTime = FileDurationUtil.getDuration(mVideoPath);
             LogUtils.d(Constant.TAG, " mVideoPath : " + mVideoPath + " mOutPath : " + mOutPath);
-//            videoView.setVideoPath(mVideoPath);
-//            final Bitmap videoFrame = MediaTool.getVideoFrame(mVideoPath, 1);
-//            ivPreview.setImageBitmap(videoFrame);
             Glide.with(this).load(mVideoPath).into(ivPreview);
-            tvName.setText(mVideoPath.substring(mVideoPath.lastIndexOf("/"), mVideoPath.length()));
+            tvName.setText(mVideoPath.substring(mVideoPath.lastIndexOf("/") + 1));
             tvContent.setText(TimeUtils.secondToTime(FileDurationUtil.getDuration(mVideoPath) / 1000));
-            //创建MediaController对象
-//            MediaController mediaController = new MediaController(this);
-//            mediaController.setVisibility(View.INVISIBLE);
-//            //VideoView与MediaController建立关联
-//            videoView.setMediaController(mediaController);
-//
-//            //让VideoView获取焦点
-//            videoView.requestFocus();
         }
         ivStart.setOnClickListener(this);
-//        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//            @Override
-//            public void onCompletion(MediaPlayer mp) {
-//                LogUtils.d(Constant.TAG, " mp " + mp.isPlaying());
-//                ivStart.setVisibility(View.VISIBLE);
-//            }
-//        });
         rate = "";
         bit = "";
         btnStartTranscode.setOnClickListener(this);
@@ -123,7 +105,7 @@ public class VideoExtractActivity extends BaseFunctionActivity implements View.O
             case R.id.iv_video_start:
                 LogUtils.d(Constant.TAG, "videoView start");
 //                ivPreview.setVisibility(View.GONE);
-                ivStart.setVisibility(View.GONE);
+//                ivStart.setVisibility(View.GONE);
                 FileManager.openFile(VideoExtractActivity.this, mVideoPath, "mp4");
 //                videoView.start();
                 break;
