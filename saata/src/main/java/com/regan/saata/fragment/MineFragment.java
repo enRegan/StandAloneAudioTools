@@ -116,32 +116,14 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                         mActivity.startActivity(sa);
                         break;
                     case 3:
-//                        run();
-//                        try {
-//                            PackageManager packageManager = mActivity.getPackageManager();
-//                            PackageInfo packageInfo = packageManager.getPackageInfo(mActivity.getPackageName(), 0);
-//                            String version = packageInfo.versionName;
-//                            Toast.makeText(mActivity, "当前版本：" + version, Toast.LENGTH_LONG).show();
-//                        } catch (PackageManager.NameNotFoundException e) {
-//                            e.printStackTrace();
-//                        }
                         try {
                             Intent i = new Intent(Intent.ACTION_VIEW);
-                            i.setData(Uri.parse("market://details?id=" + "com.tencent.mm"));
+                            i.setData(Uri.parse("market://details?id=" + mActivity.getPackageName()));
                             startActivity(i);
                         } catch (Exception e) {
                             Toast.makeText(getActivity(), "您的手机没有安装Android应用市场", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
-//                        try{
-//                            Uri uri = Uri.parse("market://details?id=" + getActivity().getPackageName());
-//                            Intent intent = new Intent(Intent.ACTION_VIEW,uri);
-//                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                            startActivity(intent);
-//                        }catch(Exception e){
-//                            Toast.makeText(getActivity(), "您的手机没有安装Android应用市场", Toast.LENGTH_SHORT).show();
-//                            e.printStackTrace();
-//                        }
                         break;
                     case 4:
                         try {

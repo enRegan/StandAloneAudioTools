@@ -13,10 +13,7 @@ import java.io.File;
 import java.util.List;
 
 public class Constant {
-    public static String TAG = "Regan";
-    public static boolean isLogin = false;
-    public static boolean toWxLogin = false;
-    public static List<MediaInfo> allAudio;
+    public static String TAG = "Video";
     // APP_ID 替换为你的应用从官方网站申请到的合法appID
     public static String WX_APPID = "wx_appid";
     public static String VIDEO_LIST = "video_list";
@@ -28,14 +25,6 @@ public class Constant {
     public static int FFMPEG_TIMEOUT = 6000 * 1000;
     public static String USER_PROTOCOL = "http://guanwang.fengdunsh.com/pro/fengdun_audioconver_userProtocol.html";
     public static String SAFE_PROTOCOL = "http://guanwang.fengdunsh.com/pro/fengdun_audioconver_privacyProtocol.html";
-
-    public static void loginChange(boolean change) {
-        isLogin = change;
-    }
-
-    public static boolean isLogin(Context context) {
-        return isLogin;
-    }
 
     public static String getChannel(Context context) {
         String channel = "";

@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,6 +22,7 @@ import com.regan.saata.R;
 import com.regan.saata.util.FileDurationUtil;
 import com.regan.saata.util.FileManager;
 import com.regan.saata.util.LogUtils;
+import com.regan.saata.util.PxUtils;
 import com.regan.saata.util.TimeUtils;
 
 import java.io.File;
@@ -60,8 +63,18 @@ public class SuccessActivity extends BaseFunctionActivity implements View.OnClic
                 Glide.with(this).load(mVideoPath).into(ivPreview);
             } else {
                 rlVideo.setBackgroundResource(R.color.transparent);
-                ivPreview.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 Glide.with(this).load(R.drawable.success_icon).into(ivPreview);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        int height = ivPreview.getHeight();
+                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tvName.getLayoutParams();
+                        params.topMargin = height / 3 * 2 - PxUtils.dp2px(SuccessActivity.this, 25);
+                        tvName.setLayoutParams(params);
+                        tvName.setVisibility(View.VISIBLE);
+                        tvContent.setVisibility(View.VISIBLE);
+                    }
+                }, 200);
             }
             if (mOutType.equals("gif")) {
                 ivStart.setVisibility(View.GONE);
@@ -85,10 +98,7 @@ public class SuccessActivity extends BaseFunctionActivity implements View.OnClic
                 break;
             case R.id.iv_video_start:
                 LogUtils.d(Constant.TAG, "videoView start");
-//                ivPreview.setVisibility(View.GONE);
-//                ivStart.setVisibility(View.GONE);
                 FileManager.openFile(SuccessActivity.this, mVideoPath, mOutType);
-//                videoView.start();
                 break;
             case R.id.ll_go_home:
                 goHome();

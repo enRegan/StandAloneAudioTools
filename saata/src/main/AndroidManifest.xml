@@ -32,6 +32,12 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="5ed128b9570df309ce0000de" /> <!-- 友盟 Appkey 自己应用注册申请来的 -->
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="${CHANNEL_NAME}" /> <!-- 渠道号，多渠道这里使用了占位符$ -->
 
         <activity
             android:name=".activity.SplashActivity"

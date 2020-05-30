@@ -126,38 +126,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         llList.setOnClickListener(this);
         llMine.setOnClickListener(this);
 
-        String loginTkoen = SharedPrefrencesUtil.getStringByKey(MainActivity.this, SharedPrefrencesUtil.LOGIN_TOKEN);
-        if (!TextUtils.isEmpty(loginTkoen)) {
-            Constant.loginChange(true);
-        }
 
-
-//        fFmpeg = FFmpeg.getInstance(this);
-//        try {
-//            fFmpeg.loadBinary(new FFmpegLoadBinaryResponseHandler() {
-//                @Override
-//                public void onFailure() {
-//                    LogUtils.d(TAG, "loadBinary onFailure");
-//                }
-//
-//                @Override
-//                public void onSuccess() {
-//                    LogUtils.d(TAG, "loadBinary onSuccess");
-//                }
-//
-//                @Override
-//                public void onStart() {
-//                    LogUtils.d(TAG, "loadBinary onStart");
-//                }
-//
-//                @Override
-//                public void onFinish() {
-//                    LogUtils.d(TAG, "loadBinary onFinish");
-//                }
-//            });
-//        } catch (FFmpegNotSupportedException e) {
-//            LogUtils.d(TAG, "FFmpegNotSupportedException : " + e.getMessage());
-//        }
 
 
         initFragment();
@@ -175,60 +144,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-//    public void run() {
-//        String[] cmd = new String[1];
-//        cmd[0] = "-version";
-//        try {
-//            fFmpeg.execute(cmd, new FFmpegExecuteResponseHandler() {
-//                @Override
-//                public void onSuccess(String message) {
-//                    Log.d(TAG, "execute onSuccess : " + message);
-//                }
-//
-//                @Override
-//                public void onProgress(String message) {
-//                    Log.d(TAG, "execute onProgress : " + message);
-//                }
-//
-//                @Override
-//                public void onFailure(String message) {
-//                    Log.d(TAG, "execute onFailure : " + message);
-//                }
-//
-//                @Override
-//                public void onStart() {
-//                    Log.d(TAG, "execute onStart : ");
-//                }
-//
-//                @Override
-//                public void onFinish() {
-//                    Log.d(TAG, "execute onFinish : ");
-//                }
-//            });
-//        } catch (FFmpegCommandAlreadyRunningException e) {
-//            Log.d(TAG, "execute exception : " + e.getMessage());
-//        }
-//    }
-
-//    public void run() {
-//        String dir = Environment.getExternalStorageDirectory().getPath() + "/ffmpegTest/";
-//
-//        //ffmpeg -i source_mp3.mp3 -ss 00:01:12 -t 00:01:42 -acodec copy output_mp3.mp3
-//        String[] commands = new String[10];
-//        commands[0] = "ffmpeg";
-//        commands[1] = "-i";
-//        commands[2] = dir+"paomo.mp3";
-//        commands[3] = "-ss";
-//        commands[4] = "00:01:00";
-//        commands[5] = "-t";
-//        commands[6] = "00:01:00";
-//        commands[7] = "-acodec";
-//        commands[8] = "copy";
-//        commands[9] = dir+"paomo_cut_mp3.mp3";
-//
-//        int result = FFmpegJni.run(commands);
-//        Toast.makeText(MainActivity.this, "命令行执行完成 result="+result, Toast.LENGTH_SHORT).show();
-//    }
 
     public static String getDetailTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault());
@@ -395,54 +310,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onActivityResult(requestCode, resultCode, data);
         LogUtils.d(Constant.TAG, " MainActivity onActivityResult : " + requestCode);
         homeFragment.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == PICK_VIDEO_REQUEST && resultCode == RESULT_OK && null != data) {
-//            mSelected = Matisse.obtainResult(data);
-//            Uri selectedVideo = mSelected.get(0);
-//            String[] filePathColumn = {MediaStore.Video.Media.DATA};
-//
-////            Cursor cursor = mActivity.getContentResolver().query(selectedVideo,
-////                    filePathColumn, null, null, null);
-////            cursor.moveToFirst();
-//            String path = "";
-//            if (DocumentsContract.isDocumentUri(this, selectedVideo)) {
-//                // 如果是document类型的Uri，则通过document id处理
-//                String docId = DocumentsContract.getDocumentId(selectedVideo);
-//                if ("com.android.providers.media.documents".equals(selectedVideo.getAuthority())) {
-//                    String id = docId.split(":")[1]; // 解析出数字格式的id
-//                    String selection = MediaStore.Video.Media._ID + "=" + id;
-//                    path = getPathFromUri(this, MediaStore.Video.Media.EXTERNAL_CONTENT_URI, selection);
-//                } else if ("com.android.providers.downloads.documents".equals(selectedVideo.getAuthority())) {
-//                    Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(docId));
-//                    path = getPathFromUri(this, contentUri, null);
-//                }
-//            } else if ("content".equalsIgnoreCase(selectedVideo.getScheme())) {
-//                // 如果是content类型的Uri，则使用普通方式处理
-//                path = getPathFromUri(this, selectedVideo, null);
-//            } else if ("file".equalsIgnoreCase(selectedVideo.getScheme())) {
-//                // 如果是file类型的Uri，直接获取图片路径即可
-//                path = selectedVideo.getPath();
-//            }
-//            String mVideoPath = path;
-////            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-////            String mVideoPath = cursor.getString(columnIndex);
-////            mVideoPath = "/sdcard/Download/gamepp/KSP.mkv";
-////            cursor.close();
-////            String mOutPath = Constant.getFilePath() + MediaTool.getVideoName(mVideoPath);
-//            String mOutPath;
-//            Intent intent;
-//            if (type == 1) {
-//                mOutPath = Constant.getFilePath() + "gif_" + System.currentTimeMillis();
-//                intent = new Intent(this, Video2GifActivity.class);
-//            } else {
-//                mOutPath = Constant.getFilePath() + "视频转码_" + System.currentTimeMillis();
-//                intent = new Intent(this, VideoExtractActivity.class);
-//            }
-////            mOutPath = Constant.getFilePath() + "音频提取_" + System.currentTimeMillis();
-//            intent.putExtra("mVideoPath", mVideoPath);
-//            intent.putExtra("mOutPath", mOutPath);
-////            startActivity(extract);
-//            startActivityForResult(intent, MainActivity.CODE_TO_FUNC);
-//        }
     }
 
     /**
